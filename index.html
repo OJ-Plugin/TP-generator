@@ -4,9 +4,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
-    <title>测试点生成者</title>
-    <!-- TODO: favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="" />
+    <title>TP Gnereator</title>
+    <link rel="shortcut icon" type="image/x-icon" href="./statics/images/favicon.svg" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-touch-fullscreen" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -24,31 +23,31 @@
         <aside class="lyear-layout-sidebar">
           <!-- logo -->
           <div id="logo" class="sidebar-header">
-            <a href="index.html">TP Generator</a>
+            <a href="./index.html"><img src="./statics/images/page_bar_logo.svg" alt="" /></a>
           </div>
           <div class="lyear-layout-sidebar-info lyear-scroll">
             <nav class="sidebar-main">
               <ul class="nav-drawer">
                 <li class="nav-item active">
-                  <a class="multitabs" href="main.html" id="default-page">
+                  <a class="multitabs" href="./main.html" id="default-page">
                     <i class="mdi mdi-home-city-outline"></i>
                     <span>首页</span>
                   </a>
                 </li>
                 <li>
-                  <a class="multitabs" href="Q2TP.html">
+                  <a class="multitabs" href="./Q2TP.html">
                     <i class="mdi mdi-code-tags-check"></i>
                     题目生成测试点
                   </a>
                 </li>
                 <li>
-                  <a class="multitabs" href="E2TP.html">
+                  <a class="multitabs" href="./E2TP.html">
                     <i class="mdi mdi-code-greater-than-or-equal"></i>
                     示例代码生成测试点
                   </a>
                 </li>
                 <li>
-                  <a class="multitabs" href="setting.html">
+                  <a class="multitabs" href="./setting.html">
                     <i class="mdi mdi-cog"></i>
                     系统设置
                   </a>
@@ -71,11 +70,11 @@
         <header class="lyear-layout-header">
           <nav class="navbar">
             <div class="navbar-left">
-              <div class="lyear-aside-toggler">
+              <!-- <div class="lyear-aside-toggler">
                 <span class="lyear-toggler-bar"></span>
                 <span class="lyear-toggler-bar"></span>
                 <span class="lyear-toggler-bar"></span>
-              </div>
+              </div> -->
             </div>
           </nav>
         </header>
@@ -97,7 +96,34 @@
     <script type="text/javascript" src="./statics/js/jquery.cookie.min.js"></script>
     <script type="text/javascript" src="./statics/js/index.min.js"></script>
     <script type="text/javascript">
-      $(document).ready(function (e) {});
+      // 检测移动设备
+      function isMobileDevice() {
+        return /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      }
+
+      // 页面加载时执行
+      document.addEventListener("DOMContentLoaded", function () {
+        if (isMobileDevice()) {
+          // 找到所有row元素
+          const rows = document.querySelectorAll(".lyear-index")[0];
+
+          rows.innerHTML = `
+          <div class='container' style='height: 100%;'>
+            <div class='row' style='height: 100%;'>
+              <div class='col-lg-12' style='margin: auto;'>
+                <div class='card'>
+                  <div class='card-body text-center'>
+                    <h4>系统提示</h4>
+                    <p>系统目前仅提供电脑端访问模式！</p>
+                    <p>请使用电脑浏览器访问以获得完整功能体验。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        }
+      });
     </script>
   </body>
 </html>

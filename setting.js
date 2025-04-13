@@ -5,11 +5,99 @@ window.onload = function () {
   } else {
     document.getElementById("temp_state").checked = false;
   }
+  load_temp();
 };
 
+function load_temp() {
+  const temp_state = window.localStorage.getItem("temp_state") === "true";
+  const provider_ = temp_state ? window.sessionStorage.getItem("provider") : window.localStorage.getItem("provider");
+  const model = temp_state ? window.sessionStorage.getItem("model") : window.localStorage.getItem("model");
+  const apiKey = temp_state ? window.sessionStorage.getItem("apiKey") : window.localStorage.getItem("apiKey");
+  const customModelName = temp_state ? window.sessionStorage.getItem("customModelName") : window.localStorage.getItem("customModelName");
+
+  if (!provider_ || !model || !apiKey) return;
+
+  // 设置provider下拉菜单
+  const providerIndex = provider.indexOf(provider_);
+  if (providerIndex > 0) {
+    document.getElementById("model_provider").value = providerIndex;
+    // 触发change事件以更新模型列表
+    document.getElementById("model_provider").dispatchEvent(new Event("change"));
+
+    // 设置model下拉菜单
+    setTimeout(() => {
+      const modelSelect = document.getElementById("model_list");
+      const modelOptions = modelSelect.options;
+      let foundModel = false;
+
+      for (let i = 0; i < modelOptions.length; i++) {
+        if (modelOptions[i].value === model) {
+          modelSelect.value = model;
+          foundModel = true;
+          break;
+        }
+      }
+
+      // 处理openrouter自定义模型
+      if (provider_ === "openrouter" && foundModel && model === "自定义模型") {
+        document.getElementById("custom_model").style.display = "block";
+        document.getElementById("custom_model_").style.display = "block";
+        document.getElementById("custom_model").value = customModelName;
+      }
+
+      // 触发change事件
+      modelSelect.dispatchEvent(new Event("change"));
+    }, 0);
+
+    // 填充API key
+    document.getElementById(`${provider_}_key_`).value = apiKey;
+  }
+}
+
 function save_temp() {
-  const state = document.getElementById("temp_state").checked;
-  window.localStorage.setItem("temp_state", state);
+  const currentState = window.localStorage.getItem("temp_state") === "true";
+  const newState = document.getElementById("temp_state").checked;
+  window.localStorage.setItem("temp_state", newState);
+
+  // temp模式状态改变时，自动对localstorage以及cookie内的模型配置信息进行转存
+  if (currentState !== newState) {
+    if (newState) {
+      // 切换到temp模式，从localStorage转存到cookie
+      const provider_ = window.localStorage.getItem("provider");
+      const model = window.localStorage.getItem("model");
+      const apiKey = window.localStorage.getItem("apiKey");
+      const customModelName = window.localStorage.getItem("customModelName");
+      if (provider_ && model && apiKey) {
+        // temp模式下使用sessionStorage，浏览器关闭时自动清除
+        window.sessionStorage.setItem("provider", provider_);
+        window.sessionStorage.setItem("model", model);
+        window.sessionStorage.setItem("apiKey", apiKey);
+        window.sessionStorage.setItem("customModelName", customModelName);
+        // 删除原localStorage数据
+        window.localStorage.removeItem("provider");
+        window.localStorage.removeItem("model");
+        window.localStorage.removeItem("apiKey");
+        window.localStorage.removeItem("customModelName");
+      }
+    } else {
+      // 切换到非temp模式，从cookie转存到localStorage
+      const provider_ = window.sessionStorage.getItem("provider");
+      const model = window.sessionStorage.getItem("model");
+      const apiKey = window.sessionStorage.getItem("apiKey");
+      const customModelName = window.sessionStorage.getItem("customModelName");
+      if (provider_ && model && apiKey) {
+        window.localStorage.setItem("provider", provider_);
+        window.localStorage.setItem("model", model);
+        window.localStorage.setItem("apiKey", apiKey);
+        window.localStorage.setItem("customModelName", customModelName);
+        // 删除原sessionStorage数据
+        window.sessionStorage.removeItem("provider");
+        window.sessionStorage.removeItem("model");
+        window.sessionStorage.removeItem("apiKey");
+        window.sessionStorage.removeItem("customModelName");
+      }
+    }
+  }
   $.notify(
     {
       icon: "mdi mdi-check-circle-outline",
@@ -37,7 +125,7 @@ function save_temp() {
         enter: "animate__animated animate__fadeInDown",
         exit: "animate__animated animate__fadeOutUp",
       },
-      onClosed: null,
+      onClosed: document.location.reload(),
     }
   );
 }
@@ -143,13 +231,69 @@ document.getElementById("model_list").addEventListener("change", function () {
   }
 });
 
-function save_setting() {
-  // TODO:使用localstorage持久化储存用户模型配置【需注意temp模型下使用cookie】
+async function save_setting() {
+  // 首先进行测试连接验证，验证失败的不能进行保存，验证成功才可以继续进行保存
+  const isConnected = await test_connection();
+  if (!isConnected) {
+    notify_failed();
+    return;
+  }
+  // 使用localstorage持久化储存用户模型配置【需注意temp模型下使用cookie】
   const provider_ = provider[document.getElementById("model_provider").value];
   var model = document.getElementById("model_list").value;
+  let customModelName = "";
   if (model === "自定义模型") {
-    model = document.getElementById("custom_model_").value;
+    customModelName = document.getElementById("custom_model").value; // 存储"自定义模型"这个名称
   }
+  const apiKey = document.getElementById(`${provider_}_key_`).value;
+  const temp_state = window.localStorage.getItem("temp_state");
+  if (temp_state === "true") {
+    // 临时使用，使用sessionStorage
+    window.sessionStorage.setItem("provider", provider_);
+    window.sessionStorage.setItem("model", model);
+    window.sessionStorage.setItem("apiKey", apiKey);
+    if (provider_ === "openrouter" && model === "自定义模型") {
+      window.sessionStorage.setItem("customModelName", customModelName);
+    }
+  } else {
+    // 持久化储存，使用localstorage
+    window.localStorage.setItem("provider", provider_);
+    window.localStorage.setItem("model", model);
+    window.localStorage.setItem("apiKey", apiKey);
+    if (provider_ === "openrouter" && model === "自定义模型") {
+      window.localStorage.setItem("customModelName", customModelName);
+    }
+  }
+  $.notify(
+    {
+      icon: "mdi mdi-check-circle-outline",
+      title: "模型配置保存成功",
+      message: "已保存模型配置！",
+      url: "",
+      target: "",
+    },
+    {
+      type: "success",
+      allow_dismiss: true,
+      newest_on_top: true,
+      placement: {
+        from: "top",
+        align: "right",
+      },
+      offset: {
+        x: 20,
+        y: 20,
+      },
+      spacing: 10,
+      z_index: 1031,
+      delay: 5000,
+      animate: {
+        enter: "animate__animated animate__fadeInDown",
+        exit: "animate__animated animate__fadeOutUp",
+      },
+      onClosed: null,
+    }
+  );
 }
 
 document.getElementById("btn_test_conn").addEventListener("click", async function () {

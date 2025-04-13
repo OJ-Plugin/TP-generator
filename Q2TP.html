@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="stylesheet" type="text/css" href="./statics/css/materialdesignicons.min.css" />
+    <link rel="stylesheet" type="text/css" href="./statics/css/bootstrap.min.css" />
+    <!--tags插件css-->
+    <link rel="stylesheet" type="text/css" href="./statics/js/jquery-tagsinput/jquery.tagsinput.min.css" />
+    <link rel="stylesheet" type="text/css" href="./statics/css/style.min.css" />
+    <!-- 动画插件css -->
+    <link rel="stylesheet" type="text/css" href="./statics/css/animate.min.css" />
+    <!-- EasyMDE Markdown Editor CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css" />
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="card">
+            <header class="card-header">
+              <div class="card-title">题目</div>
+            </header>
+            <div class="card-body">
+              <label for="ranger" class="form-label">测试点数量：</label>
+              <input type="number" min="1" max="20" value="5" style="margin-bottom: 0.5rem" class="form-control" id="ranger" />
+              <button class="btn btn-primary" style="display: block; width: 100%; margin-bottom: 0.5rem;" id="generate_btn">点击生成测试点</button>
+              <textarea id="markdown-editor"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="card">
+            <header class="card-header">
+              <div class="card-title">测试点</div>
+            </header>
+            <div class="card-body">
+              <p style="color: red">注意：AI生成的测试点数据可能不准确，请酌情使用！</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="./statics/js/jquery.min.js"></script>
+    <script type="text/javascript" src="./statics/js/popper.min.js"></script>
+    <script type="text/javascript" src="./statics/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./statics/js/jquery.cookie.min.js"></script>
+    <!-- loading插件 -->
+    <script type="text/javascript" src="./statics/js/lyear-loading.js"></script>
+    <!-- 通知插件 -->
+    <script type="text/javascript" src="./statics/js/bootstrap-notify.min.js"></script>
+
+    <script type="text/javascript" src="./q2tp.js"></script>
+    <script type="text/javascript" src="./ai_generation.js"></script>
+
+    <!-- EasyMDE Markdown Editor JS -->
+    <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+    <script>
+      // 初始化Markdown编辑器
+      const easyMDE = new EasyMDE({
+        element: document.getElementById("markdown-editor"),
+        spellChecker: false,
+        autosave: {
+          enabled: true,
+          uniqueId: "q2tp-editor",
+          delay: 1000,
+        },
+        placeholder: "在这里输入题目内容...",
+        status: false,
+        toolbar: ["bold", "italic", "heading", "|", "quote", "unordered-list", "ordered-list", "|", "link", "image", "|", "preview", "side-by-side", "fullscreen", "|", "guide"],
+      });
+    </script>
+  </body>
+</html>
