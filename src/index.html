@@ -13,6 +13,8 @@
     <link rel="stylesheet" type="text/css" href="./statics/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="./statics/css/animate.min.css" />
     <link rel="stylesheet" type="text/css" href="./statics/js/bootstrap-multitabs/multitabs.min.css" />
+    <!--对话框插件css-->
+    <link rel="stylesheet" type="text/css" href="js/jquery-confirm/jquery-confirm.min.css" />
     <link rel="stylesheet" type="text/css" href="./statics/css/style.min.css" />
   </head>
 
@@ -94,6 +96,11 @@
     <script type="text/javascript" src="./statics/js/perfect-scrollbar.min.js"></script>
     <script type="text/javascript" src="./statics/js/bootstrap-multitabs/multitabs.min.js"></script>
     <script type="text/javascript" src="./statics/js/jquery.cookie.min.js"></script>
+    <!--引入loading插件js-->
+    <script type="text/javascript" src="js/lyear-loading.js"></script>
+    <!--对话框插件js-->
+    <script type="text/javascript" src="js/jquery-confirm/jquery-confirm.min.js"></script>
+    <script type="text/javascript" src="js/main.min.js"></script>
     <script type="text/javascript" src="./statics/js/index.min.js"></script>
     <script type="text/javascript">
       // 检测移动设备
@@ -124,6 +131,83 @@
         `;
         }
       });
+    </script>
+    <!-- TODO: Wait to be resolved: Uncaught TypeError: Failed to resolve module specifier "@tauri-apps/api/app". Relative references must start with either "/", "./", or "../". -->
+    <script type="module">
+      import { getVersion } from "@tauri-apps/api/app";
+      import { open } from "@tauri-apps/api/shell";
+      import { appWindow } from "@tauri-apps/api/window";
+
+      const GITHUB_API = "https://api.github.com/OJ-Plugin/TP-generator/repo/releases/latest";
+      const GITEE_API = "https://gitee.com/api/v5/repos/OJ-Plugin/TP-generator/releases/latest";
+      document.addEventListener("DOMContentLoaded", async function check_update() {
+        var l = $("body").lyearloading({
+          opacity: 0.2,
+          spinnerSize: "lg",
+        });
+        // 获取本地版本号
+        const currentVersion = await getVersion();
+
+        // 用 Tauri 内置的 HTTP fetch （推荐解决跨域问题，也可以用 window.fetch）
+        const { fetch } = await import("@tauri-apps/api/http");
+        // 获取 GitHub最新release
+        const resp = await fetch(GITEE_API, {
+          method: "GET",
+          // 可以加headers，如果必要比如 User-Agent，但一般无须
+          responseType: 1, // JSON
+        });
+
+        const latest = resp.data;
+        // GitHub release 版本号在 tag_name 字段
+        const latestVersion = latest.tag_name.startsWith("v") ? latest.tag_name.slice(1) : latest.tag_name;
+
+        console.log("当前版本：", currentVersion);
+        console.log("最新版本：", latestVersion);
+
+        if (compareVersion(latestVersion, currentVersion) > 0) {
+          console.log("有新版本可用：" + latest.tag_name);
+          // 这里可以弹窗或者为前端按钮提供下载等操作
+          $.alert({
+            title: "检查更新",
+            content: "发现新版本(" + latestVersion + ")，更新后再愉快的使用吧！",
+            icon: "mdi mdi-rocket",
+            animation: "scale",
+            closeAnimation: "scale",
+            buttons: {
+              github: {
+                text: "GitHub更新",
+                btnClass: "btn-blue",
+                action: openLinkAndClose("https://github.com/OJ-Plugin/TP-generator/releases/latest"),
+              },
+              gitee: {
+                text: "Gitee更新",
+                btnClass: "btn-blue",
+                action: openLinkAndClose("https://gitee.com/OJ-Plugin/TP-generator/releases"),
+              },
+            },
+          });
+        } else {
+          console.log("已是最新版本");
+          l.destroy();
+        }
+      });
+
+      function compareVersion(v1, v2) {
+        const s1 = v1.split(".").map(Number);
+        const s2 = v2.split(".").map(Number);
+        for (let i = 0; i < Math.max(s1.length, s2.length); i++) {
+          const n1 = s1[i] || 0,
+            n2 = s2[i] || 0;
+          if (n1 > n2) return 1;
+          if (n1 < n2) return -1;
+        }
+        return 0;
+      }
+
+      async function openLinkAndClose(url) {
+        await open(url);
+        await appWindow.close();
+      }
     </script>
   </body>
 </html>
