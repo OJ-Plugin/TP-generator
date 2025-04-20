@@ -10,14 +10,14 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "tp-generator",
+        "title": "TP Generator",
         "width": 1300,
         "height": 830,
         "maximized": true
       }
     ],
     "security": {
-      "csp": "default-src 'self' https://openrouter.ai https://*.openrouter.ai"
+      "csp": null
     }
   },
   "bundle": {
