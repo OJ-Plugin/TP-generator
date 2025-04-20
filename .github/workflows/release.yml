@@ -82,6 +82,26 @@ jobs:
         run: |
           mkdir -p src-tauri/icons/
           brew install imagemagick
+          # 使用 magick 命令代替 convert
+          magick icon.png -resize 32x32 src-tauri/icons/32x32.png
+          magick icon.png -resize 64x64 src-tauri/icons/64x64.png
+          magick icon.png -resize 128x128 src-tauri/icons/128x128.png
+          magick icon.png -resize 256x256 src-tauri/icons/128x128@2x.png
+          magick icon.png -resize 256x256 src-tauri/icons/256x256.png
+          magick icon.png -resize 512x512 src-tauri/icons/256x256@2x.png
+          magick icon.png -resize 512x512 src-tauri/icons/512x512.png
+          magick icon.png -resize 1024x1024 src-tauri/icons/512x512@2x.png
+          magick icon.png -resize 1024x1024 src-tauri/icons/icon.png
+
+          # 直接使用 imagemagick 创建 icns 文件
+          magick src-tauri/icons/*.png src-tauri/icons/icon.icns
+
+      # Linux 图标处理
+      - name: Generate app icons for Linux
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          mkdir -p src-tauri/icons/
+          sudo apt-get install -y imagemagick
           convert icon.png -resize 32x32 src-tauri/icons/32x32.png
           convert icon.png -resize 64x64 src-tauri/icons/64x64.png
           convert icon.png -resize 128x128 src-tauri/icons/128x128.png
@@ -91,23 +111,6 @@ jobs:
           convert icon.png -resize 512x512 src-tauri/icons/512x512.png
           convert icon.png -resize 1024x1024 src-tauri/icons/512x512@2x.png
           convert icon.png -resize 1024x1024 src-tauri/icons/icon.png
-
-          # 安装并使用 png2icns 创建 icns 文件
-          brew install libicns
-          png2icns src-tauri/icons/icon.icns src-tauri/icons/*.png
-
-      # Linux 图标处理
-      - name: Generate app icons for Linux
-        if: matrix.platform == 'ubuntu-latest'
-        run: |
-          mkdir -p src-tauri/icons/
-          sudo apt-get install -y imagemagick
-          convert icon.png -resize 32x32 src-tauri/icons/32x32.png
-          convert icon.png -resize 128x128 src-tauri/icons/128x128.png
-          convert icon.png -resize 256x256 src-tauri/icons/256x256.png
-          convert icon.png -resize 512x512 src-tauri/icons/512x512.png
-          convert icon.png -resize 1024x1024 src-tauri/icons/1024x1024.png
-          cp src-tauri/icons/512x512.png src-tauri/icons/icon.png
 
       # Windows 图标处理
       - name: Generate app icons for Windows
