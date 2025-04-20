@@ -112,6 +112,10 @@ jobs:
           convert icon.png -resize 1024x1024 src-tauri/icons/512x512@2x.png
           convert icon.png -resize 1024x1024 src-tauri/icons/icon.png
 
+          # 创建一个空的 .icns 文件以满足 Tauri 的要求
+          # 即使在 Linux 上不需要，但 Tauri 似乎在检查
+          cp src-tauri/icons/icon.png src-tauri/icons/icon.icns
+
       # Windows 图标处理
       - name: Generate app icons for Windows
         if: matrix.platform == 'windows-latest'
