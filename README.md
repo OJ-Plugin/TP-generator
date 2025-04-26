@@ -1,8 +1,8 @@
 # TP-generator
 
 <!-- ![Logo](icon.png)   -->
-<div style="text-align:center;"><img src="./icon.png" style="width:128px;"/></div>
-<div style="text-align:center;">
+<div align="center"><img src="./icon.png" width=128/></div>
+<div align="center">
 <h1>TP-generator</h1>
 
 [![License](https://img.shields.io/github/license/OJ-Plugin/TP-generator.svg)](https://github.com/OJ-Plugin/TP-generator/blob/main/LICENSE)
@@ -30,9 +30,9 @@ TP-generator is a versatile tool for generating various types of TP (Task Packag
 
 | Operating System | Download Link                              |
 |------------------|--------------------------------------------|
-| Windows          | [Download Windows v0.1.3 (*.exe)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.3/tp-generator_0.1.3_x64-setup.exe) |
-| macOS            | [Download macOS v0.1.3 (*.dmg)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.3/tp-generator_0.1.3_aarch64.dmg) |
-| Linux            | [Download Linux v0.1.3 (*.deb)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.3/tp-generator_0.1.3_amd64.deb) |
+| Windows          | [Download Windows v0.1.4 (*.exe)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.4/tp-generator_0.1.4_x64-setup.exe) |
+| macOS            | [Download macOS v0.1.4 (*.dmg)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.4/tp-generator_0.1.4_aarch64.dmg) |
+| Linux            | [Download Linux v0.1.4 (*.deb)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.4/tp-generator_0.1.4_amd64.deb) |
 
 
 ## Contributing

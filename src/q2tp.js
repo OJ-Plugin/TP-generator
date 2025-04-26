@@ -1,3 +1,43 @@
+document.getElementById("save_btn").addEventListener("click", async function () {
+  try {
+    const range = document.getElementById("ranger").value;
+    var testData = { in: [], out: [] };
+    for (let index = 1; index <= range; index++) {
+      const in_element = document.getElementById("in_val_" + index).value;
+      const out_element = document.getElementById("out_val_" + index).value;
+      testData.in.push(in_element);
+      testData.out.push(out_element);
+    }
+
+    console.log(testData);
+
+    // 请求用户选择文件夹
+    let dirHandle = await window.showDirectoryPicker();
+
+    for (let index = 1; index <= range; index++) {
+      // 创建文件
+      const in_fileHandle = await dirHandle.getFileHandle(index + ".in", { create: true });
+      const in_writable = await in_fileHandle.createWritable();
+
+      const in_content = testData.in[index - 1];
+      await in_writable.write(in_content);
+      await in_writable.close();
+
+      const out_fileHandle = await dirHandle.getFileHandle(index + ".out", { create: true });
+      const out_writable = await out_fileHandle.createWritable();
+
+      const out_content = testData.out[index - 1];
+      await out_writable.write(out_content);
+      await out_writable.close();
+    }
+
+    alert("文件已成功创建!");
+  } catch (error) {
+    console.error("创建文件出错:", error);
+    alert("创建文件失败: " + error);
+  }
+});
+
 document.getElementById("generate_btn").addEventListener("click", async function () {
   $(this).attr("disable", "true");
   var l = $(this).lyearloading({
@@ -6,12 +46,27 @@ document.getElementById("generate_btn").addEventListener("click", async function
   });
   const markdownContent = easyMDE.value();
   const ranger = document.getElementById("ranger").value;
-  const tps = await question_get_tp(markdownContent, ranger);
-  console.log("tps", tps);
-  l.destroy();
+  const tps = await question_get_tp(markdownContent, ranger, l);
+  const res = JSON.parse(tps);
+  var in_data = "<span>Input数据</span>",
+    out_data = "<span>Output数据</span>",
+    count = 1;
+  res.forEach((c) => {
+    in_data += `<div class="input-group mb-3">
+                <span class="input-group-text">${count}</span>
+                <input type="text" class="form-control" id="in_val_${count}" value="${c.in}">
+              </div>`;
+    out_data += `<div class="input-group mb-3">
+                  <span class="input-group-text">${count}</span>
+                  <input type="text" class="form-control" id="out_val_${count}" value="${c.out}">
+                </div>`;
+    count++;
+  });
+  document.getElementById("in_box").innerHTML = in_data;
+  document.getElementById("out_box").innerHTML = out_data;
 });
 
-async function question_get_tp(markdownPrompt, nCases = 5) {
+async function question_get_tp(markdownPrompt, nCases = 5, l) {
   const temp_state = localStorage.getItem("temp_state") === "true";
   const storage = temp_state ? sessionStorage : localStorage;
   const provider = storage.getItem("provider");
@@ -64,6 +119,6 @@ async function question_get_tp(markdownPrompt, nCases = 5) {
     default:
       break;
   }
-
+  l.destroy();
   return unformData;
 }

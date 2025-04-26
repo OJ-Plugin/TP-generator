@@ -28,7 +28,7 @@
             <div class="card-body">
               <label for="ranger" class="form-label">测试点数量：</label>
               <input type="number" min="1" max="20" value="5" style="margin-bottom: 0.5rem" class="form-control" id="ranger" />
-              <button class="btn btn-primary" style="display: block; width: 100%; margin-bottom: 0.5rem;" id="generate_btn">点击生成测试点</button>
+              <button class="btn btn-primary" style="display: block; width: 100%; margin-bottom: 0.5rem" id="generate_btn">点击生成测试点</button>
               <textarea id="markdown-editor"></textarea>
             </div>
           </div>
@@ -36,10 +36,19 @@
         <div class="col-lg-6">
           <div class="card">
             <header class="card-header">
-              <div class="card-title">测试点</div>
+              <div class="card-title">测试点（可手动编辑）</div>
             </header>
             <div class="card-body">
               <p style="color: red">注意：AI生成的测试点数据可能不准确，请酌情使用！</p>
+              <div id="point-box" class="row">
+                <div class="col-6" id="in_box">
+                  <span>Input数据</span>
+                </div>
+                <div class="col-6" id="out_box">
+                  <span>Output数据</span>
+                </div>
+              </div>
+              <button class="btn btn-success btn-blcok" style="margin-top: 0.5rem; width: 100%" id="save_btn">保存到本地</button>
             </div>
           </div>
         </div>

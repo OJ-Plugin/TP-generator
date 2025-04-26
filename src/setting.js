@@ -231,11 +231,17 @@ document.getElementById("model_list").addEventListener("change", function () {
   }
 });
 
-async function save_setting() {
+document.getElementById("save_setting_btn").addEventListener("click", async function (params) {
+  $(this).attr("disable", "true");
+  var l = $(this).lyearloading({
+    opacity: 0.2,
+    spinnerSize: "nm",
+  });
   // 首先进行测试连接验证，验证失败的不能进行保存，验证成功才可以继续进行保存
   const isConnected = await test_connection();
   if (!isConnected) {
     notify_failed();
+    l.destroy();
     return;
   }
   // 使用localstorage持久化储存用户模型配置【需注意temp模型下使用cookie】
@@ -291,10 +297,10 @@ async function save_setting() {
         enter: "animate__animated animate__fadeInDown",
         exit: "animate__animated animate__fadeOutUp",
       },
-      onClosed: null,
+      onClosed: l.destroy(),
     }
   );
-}
+});
 
 document.getElementById("btn_test_conn").addEventListener("click", async function () {
   $(this).attr("disable", "true");

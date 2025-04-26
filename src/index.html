@@ -25,7 +25,7 @@
         <aside class="lyear-layout-sidebar">
           <!-- logo -->
           <div id="logo" class="sidebar-header">
-            <a href="./index.html"><img src="./statics/images/page_bar_logo.svg" alt="" /></a>
+            <a href="./index.html"><img src="./statics/images/page_bar_logo.png" alt="" /></a>
           </div>
           <div class="lyear-layout-sidebar-info lyear-scroll">
             <nav class="sidebar-main">
@@ -132,8 +132,52 @@
         }
       });
     </script>
-    <!-- TODO: Wait to be resolved: Uncaught TypeError: Failed to resolve module specifier "@tauri-apps/api/app". Relative references must start with either "/", "./", or "../". -->
     <script type="module">
+      import { getVersion } from "https://unpkg.com/@tauri-apps/api/app?module";
+      async function checkForUpdate() {
+        try {
+          // 获取当前本地版本
+          const currentVersion = await getVersion();
+          currentVersionText.textContent = currentVersion;
+
+          // 获取 GitHub 上最新版本（Releases API）
+          const response = await fetch("https://api.github.com/repos/OJ-Plugin/TP-generator/releases/latest", {
+            headers: {
+              Accept: "application/vnd.github.v3+json",
+            },
+          });
+
+          if (!response.ok) throw new Error("GitHub API 请求失败");
+
+          const releaseData = await response.json();
+          const latestVersion = releaseData.tag_name.replace(/^v/, ""); // 如果是 v1.2.3 这种，加这行处理
+          latestVersionText.textContent = latestVersion;
+
+          // 对比版本（简单字符串比较，如果你用语义化版本，可以做更复杂的比较）
+          if (latestVersion !== currentVersion) {
+            console.log("发现新版本，准备更新...");
+            update_app();
+          } else {
+            console.log("当前已经是最新版本");
+          }
+        } catch (err) {
+          console.error("检查更新失败:", err);
+          latestVersionText.textContent = "检查失败";
+        }
+      }
+
+      function update_app() {
+        // 你可以在这里写更新逻辑，比如打开下载链接、调用 Tauri 后端、提示用户更新等
+        alert("检测到新版本，准备更新！");
+        // 示例：跳转到 GitHub Releases 页面
+        window.open("https://github.com/OJ-Plugin/TP-generator/releases/latest", "_blank");
+      }
+
+      // 启动检查
+      checkForUpdate();
+    </script>
+    <!-- TODO: Wait to be resolved: Uncaught TypeError: Failed to resolve module specifier "@tauri-apps/api/app". Relative references must start with either "/", "./", or "../". -->
+    <!-- <script type="module">
       import { getVersion } from "@tauri-apps/api/app";
       import { open } from "@tauri-apps/api/shell";
       import { appWindow } from "@tauri-apps/api/window";
@@ -208,6 +252,6 @@
         await open(url);
         await appWindow.close();
       }
-    </script>
+    </script> -->
   </body>
 </html>
