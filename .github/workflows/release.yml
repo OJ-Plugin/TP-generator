@@ -6,7 +6,6 @@ on:
       - "v*"
   workflow_dispatch:
 
-# 添加权限设置
 permissions:
   contents: write
 
@@ -66,34 +65,27 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Install dependencies (Linux)
+      - name: Install dependencies (Linux only)
         if: matrix.platform == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          # 修复 Ubuntu 依赖项
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libxdo-dev
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libxdo-dev imagemagick
 
       - name: Install frontend dependencies
-        run: npm ci # or yarn install or pnpm install
+        run: npm ci
 
       # macOS 图标处理
       - name: Generate app icons for macOS
         if: matrix.platform == 'macos-latest'
         run: |
-          mkdir -p src-tauri/icons/
           brew install imagemagick
-          # 使用 magick 命令代替 convert
-          magick icon.png -resize 32x32 src-tauri/icons/32x32.png
-          magick icon.png -resize 64x64 src-tauri/icons/64x64.png
-          magick icon.png -resize 128x128 src-tauri/icons/128x128.png
-          magick icon.png -resize 256x256 src-tauri/icons/128x128@2x.png
-          magick icon.png -resize 256x256 src-tauri/icons/256x256.png
-          magick icon.png -resize 512x512 src-tauri/icons/256x256@2x.png
-          magick icon.png -resize 512x512 src-tauri/icons/512x512.png
-          magick icon.png -resize 1024x1024 src-tauri/icons/512x512@2x.png
-          magick icon.png -resize 1024x1024 src-tauri/icons/icon.png
-
-          # 直接使用 imagemagick 创建 icns 文件
+          mkdir -p src-tauri/icons/
+          for size in 32 64 128 256 512 1024; do
+            magick icon.png -resize ${size}x${size} -define png:color-type=6 src-tauri/icons/${size}x${size}.png
+          done
+          cp src-tauri/icons/256x256.png src-tauri/icons/128x128@2x.png
+          cp src-tauri/icons/512x512.png src-tauri/icons/256x256@2x.png
+          cp src-tauri/icons/1024x1024.png src-tauri/icons/512x512@2x.png
           magick src-tauri/icons/*.png src-tauri/icons/icon.icns
 
       # Linux 图标处理
@@ -101,34 +93,23 @@ jobs:
         if: matrix.platform == 'ubuntu-latest'
         run: |
           mkdir -p src-tauri/icons/
-          sudo apt-get install -y imagemagick
-          convert icon.png -resize 32x32 src-tauri/icons/32x32.png
-          convert icon.png -resize 64x64 src-tauri/icons/64x64.png
-          convert icon.png -resize 128x128 src-tauri/icons/128x128.png
-          convert icon.png -resize 256x256 src-tauri/icons/128x128@2x.png
-          convert icon.png -resize 256x256 src-tauri/icons/256x256.png
-          convert icon.png -resize 512x512 src-tauri/icons/256x256@2x.png
-          convert icon.png -resize 512x512 src-tauri/icons/512x512.png
-          convert icon.png -resize 1024x1024 src-tauri/icons/512x512@2x.png
-          convert icon.png -resize 1024x1024 src-tauri/icons/icon.png
-
-          # 创建一个空的 .icns 文件以满足 Tauri 的要求
-          cp src-tauri/icons/icon.png src-tauri/icons/icon.icns
-
-          # 创建 .ico 文件以满足 Tauri 的要求
+          for size in 32 64 128 256 512 1024; do
+            convert icon.png -resize ${size}x${size} -define png:color-type=6 src-tauri/icons/${size}x${size}.png
+          done
+          cp src-tauri/icons/256x256.png src-tauri/icons/icon.png
           convert src-tauri/icons/32x32.png src-tauri/icons/128x128.png src-tauri/icons/256x256.png src-tauri/icons/icon.ico
+          cp src-tauri/icons/icon.png src-tauri/icons/icon.icns
 
       # Windows 图标处理
       - name: Generate app icons for Windows
         if: matrix.platform == 'windows-latest'
         run: |
-          mkdir -p src-tauri/icons/
-          # 在 Windows 上安装 ImageMagick
           choco install imagemagick -y
-          magick icon.png -resize 32x32 src-tauri/icons/32x32.png
-          magick icon.png -resize 128x128 src-tauri/icons/128x128.png
-          magick icon.png -resize 256x256 src-tauri/icons/256x256.png
-          magick icon.png -resize 256x256 src-tauri/icons/icon.ico
+          mkdir src-tauri/icons
+          magick icon.png -resize 32x32 -define png:color-type=6 src-tauri/icons/32x32.png
+          magick icon.png -resize 128x128 -define png:color-type=6 src-tauri/icons/128x128.png
+          magick icon.png -resize 256x256 -define png:color-type=6 src-tauri/icons/256x256.png
+          magick src-tauri/icons/32x32.png src-tauri/icons/128x128.png src-tauri/icons/256x256.png src-tauri/icons/icon.ico
 
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
