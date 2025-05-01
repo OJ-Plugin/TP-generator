@@ -30,9 +30,9 @@ TP-generator is a versatile tool for generating various types of TP (Task Packag
 
 | Operating System | Download Link                              |
 |------------------|--------------------------------------------|
-| Windows          | [Download Windows v0.1.7 (*.exe)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.7/tp-generator_0.1.7_x64-setup.exe) |
-| macOS            | [Download macOS v0.1.7 (*.dmg)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.7/tp-generator_0.1.7_aarch64.dmg) |
-| Linux            | [Download Linux v0.1.7 (*.deb)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.7/tp-generator_0.1.7_amd64.deb) |
+| Windows          | [Download Windows v0.1.8 (*.exe)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.8/tp-generator_0.1.8_x64-setup.exe) |
+| macOS            | [Download macOS v0.1.8 (*.dmg)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.8/tp-generator_0.1.8_aarch64.dmg) |
+| Linux            | [Download Linux v0.1.8 (*.deb)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.8/tp-generator_0.1.8_amd64.deb) |
 
 
 ## Contributing
