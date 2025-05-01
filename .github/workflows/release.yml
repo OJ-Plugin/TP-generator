@@ -96,7 +96,13 @@ jobs:
           for size in 32 64 128 256 512 1024; do
             convert icon.png -resize ${size}x${size} -define png:color-type=6 src-tauri/icons/${size}x${size}.png
           done
+          # 模拟 @2x 图标（Tauri 需要）
+          cp src-tauri/icons/256x256.png src-tauri/icons/128x128@2x.png
+          cp src-tauri/icons/512x512.png src-tauri/icons/256x256@2x.png
+          cp src-tauri/icons/1024x1024.png src-tauri/icons/512x512@2x.png
+          # 设置主图标（非必须，但推荐）
           cp src-tauri/icons/256x256.png src-tauri/icons/icon.png
+          # 生成 ico/icns（确保打包成功）
           convert src-tauri/icons/32x32.png src-tauri/icons/128x128.png src-tauri/icons/256x256.png src-tauri/icons/icon.ico
           cp src-tauri/icons/icon.png src-tauri/icons/icon.icns
 
