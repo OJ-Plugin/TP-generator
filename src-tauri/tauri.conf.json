@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "tp-generator",
+  "productName": "TP Generator",
   "version": "0.1.6",
   "identifier": "com.tp-generator.app",
   "build": {
@@ -23,14 +23,12 @@
   "bundle": {
     "active": true,
     "targets": "all",
-    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"]
-  },
-  "plugins": {
-    "updater": {
-      "active": true,
-      "dialog": true,
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDFBRjk3OTEzQURENUREOTIKUldTUzNkV3RFM241R2puejJSYWJlMTBkaXNyWUtQWVpBRXI1aUFESHFZdmdoU001UWZSd1Y1VkwK",
-      "endpoints": ["https://github.com/OJ-Plugin/TP-generator/releases/latest/download/latest.json"]
-    }
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
   }
 }
