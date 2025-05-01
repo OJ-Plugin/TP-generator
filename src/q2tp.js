@@ -9,8 +9,6 @@ document.getElementById("save_btn").addEventListener("click", async function () 
       testData.out.push(out_element);
     }
 
-    console.log(testData);
-
     // 请求用户选择文件夹
     let dirHandle = await window.showDirectoryPicker();
 
@@ -31,10 +29,10 @@ document.getElementById("save_btn").addEventListener("click", async function () 
       await out_writable.close();
     }
 
-    alert("文件已成功创建!");
+    save_success();
   } catch (error) {
     console.error("创建文件出错:", error);
-    alert("创建文件失败: " + error);
+    save_error();
   }
 });
 
@@ -121,4 +119,68 @@ async function question_get_tp(markdownPrompt, nCases = 5, l) {
   }
   l.destroy();
   return unformData;
+}
+
+function save_success() {
+  $.notify(
+    {
+      icon: "mdi mdi-check-circle-outline",
+      title: "保存测试点",
+      message: "文件保存成功！",
+    },
+    {
+      type: "success",
+      allow_dismiss: true,
+      newest_on_top: false,
+      placement: {
+        from: "top",
+        align: "right",
+      },
+      offset: {
+        x: 20,
+        y: 20,
+      },
+      spacing: 10,
+      z_index: 1031,
+      delay: 5000,
+      animate: {
+        enter: "animate__animated animate__fadeInDown",
+        exit: "animate__animated animate__fadeOutUp",
+      },
+      onClosed: null,
+      mouse_over: null,
+    }
+  );
+}
+
+function save_error() {
+  $.notify(
+    {
+      icon: "mdi mdi-close",
+      title: "保存测试点",
+      message: "文件保存失败！",
+    },
+    {
+      type: "danger",
+      allow_dismiss: true,
+      newest_on_top: false,
+      placement: {
+        from: "top",
+        align: "right",
+      },
+      offset: {
+        x: 20,
+        y: 20,
+      },
+      spacing: 10,
+      z_index: 1031,
+      delay: 5000,
+      animate: {
+        enter: "animate__animated animate__fadeInDown",
+        exit: "animate__animated animate__fadeOutUp",
+      },
+      onClosed: null,
+      mouse_over: null,
+    }
+  );
 }

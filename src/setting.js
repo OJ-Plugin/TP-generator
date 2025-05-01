@@ -14,6 +14,9 @@ function load_temp() {
   const model = temp_state ? window.sessionStorage.getItem("model") : window.localStorage.getItem("model");
   const apiKey = temp_state ? window.sessionStorage.getItem("apiKey") : window.localStorage.getItem("apiKey");
   const customModelName = temp_state ? window.sessionStorage.getItem("customModelName") : window.localStorage.getItem("customModelName");
+  const judge0_key = temp_state ? window.sessionStorage.getItem("judge0") : window.localStorage.getItem("judge0");
+
+  document.getElementById("judge0_api_key").value = judge0_key;
 
   if (!provider_ || !model || !apiKey) return;
 
@@ -67,6 +70,7 @@ function save_temp() {
       const model = window.localStorage.getItem("model");
       const apiKey = window.localStorage.getItem("apiKey");
       const customModelName = window.localStorage.getItem("customModelName");
+      const judge0 = window.localStorage.getItem("judge0");
       if (provider_ && model && apiKey) {
         // temp模式下使用sessionStorage，浏览器关闭时自动清除
         window.sessionStorage.setItem("provider", provider_);
@@ -79,12 +83,15 @@ function save_temp() {
         window.localStorage.removeItem("apiKey");
         window.localStorage.removeItem("customModelName");
       }
+      window.sessionStorage.setItem("judge0", judge0);
+      window.localStorage.removeItem("judge0");
     } else {
       // 切换到非temp模式，从cookie转存到localStorage
       const provider_ = window.sessionStorage.getItem("provider");
       const model = window.sessionStorage.getItem("model");
       const apiKey = window.sessionStorage.getItem("apiKey");
       const customModelName = window.sessionStorage.getItem("customModelName");
+      const judge0 = window.sessionStorage.getItem("judge0");
       if (provider_ && model && apiKey) {
         window.localStorage.setItem("provider", provider_);
         window.localStorage.setItem("model", model);
@@ -96,6 +103,8 @@ function save_temp() {
         window.sessionStorage.removeItem("apiKey");
         window.sessionStorage.removeItem("customModelName");
       }
+      window.localStorage.setItem("judge0", judge0);
+      window.sessionStorage.removeItem("judge0");
     }
   }
   $.notify(
@@ -231,7 +240,7 @@ document.getElementById("model_list").addEventListener("change", function () {
   }
 });
 
-document.getElementById("save_setting_btn").addEventListener("click", async function (params) {
+document.getElementById("save_setting_btn").addEventListener("click", async function () {
   $(this).attr("disable", "true");
   var l = $(this).lyearloading({
     opacity: 0.2,
@@ -371,14 +380,202 @@ async function test_connection() {
   }
 }
 
+document.getElementById("save_setting_judge0").addEventListener("click", async function () {
+  $(this).attr("disable", "true");
+  var l = $(this).lyearloading({
+    opacity: 0.2,
+    spinnerSize: "nm",
+  });
+  // 首先进行测试连接验证，验证失败的不能进行保存，验证成功才可以继续进行保存
+  const apiKey = document.getElementById("judge0_api_key").value;
+  if (apiKey === "") {
+    var temp_state = window.localStorage.getItem("temp_state");
+    if (temp_state === "true") {
+      window.sessionStorage.setItem("judge0", "");
+    } else {
+      window.localStorage.setItem("judge0", apiKey);
+    }
+    notify_judge0_clear();
+  } else {
+    let isConnected = false;
+    isConnected = await test_judge0_conn(apiKey);
+    if (!isConnected) {
+      notify_invalid_setting_judge0();
+      l.destroy();
+      return;
+    }
+    // 使用localstorage持久化储存用户模型配置【需注意temp模型下使用cookie】
+    const key = document.getElementById("judge0_api_key").value;
+    const temp_state = window.localStorage.getItem("temp_state");
+    if (temp_state === "true") {
+      // 临时使用，使用sessionStorage
+      window.sessionStorage.setItem("judge0", key);
+    } else {
+      // 持久化储存，使用localstorage
+      window.localStorage.setItem("judge0", key);
+    }
+    $.notify(
+      {
+        icon: "mdi mdi-check-circle-outline",
+        title: "配置保存成功",
+        message: "已保存Judge0配置！",
+      },
+      {
+        type: "success",
+        allow_dismiss: true,
+        newest_on_top: true,
+        placement: {
+          from: "top",
+          align: "right",
+        },
+        offset: {
+          x: 20,
+          y: 20,
+        },
+        spacing: 10,
+        z_index: 1031,
+        delay: 5000,
+        animate: {
+          enter: "animate__animated animate__fadeInDown",
+          exit: "animate__animated animate__fadeOutUp",
+        },
+        onClosed: l.destroy(),
+      }
+    );
+  }
+});
+
+document.getElementById("judge0_test_conn").addEventListener("click", async function () {
+  $(this).attr("disable", "true");
+  var l = $(this).lyearloading({
+    opacity: 0.2,
+    spinnerSize: "nm",
+  });
+  const apiKey = document.getElementById("judge0_api_key").value;
+  if (apiKey === "") {
+    notify_invalid_setting_judge0();
+  } else {
+    try {
+      let isConnected = await test_judge0_conn(apiKey);
+      if (isConnected) {
+        notify_success_setting_judge0();
+      } else {
+        notify_invalid_setting_judge0();
+      }
+    } catch (error) {
+      console.error("Connection test failed:", error);
+      notify_invalid_setting_judge0();
+    } finally {
+      l.destroy();
+    }
+  }
+});
+
+async function test_judge0_conn(apiKey) {
+  let isConnected = false;
+  isConnected = await testJudge0Connection(apiKey);
+  return isConnected;
+}
+
+function notify_success_setting_judge0() {
+  $.notify(
+    {
+      icon: "mdi mdi-check-circle-outline",
+      title: "Judge0服务测试",
+      message: "恭喜您！测试连接成功！",
+    },
+    {
+      type: "success",
+      allow_dismiss: true,
+      newest_on_top: true,
+      placement: {
+        from: "top",
+        align: "right",
+      },
+      offset: {
+        x: 20,
+        y: 20,
+      },
+      spacing: 10,
+      z_index: 1031,
+      delay: 5000,
+      animate: {
+        enter: "animate__animated animate__fadeInDown",
+        exit: "animate__animated animate__fadeOutUp",
+      },
+      onClosed: null,
+    }
+  );
+}
+
+function notify_invalid_setting_judge0() {
+  $.notify(
+    {
+      icon: "mdi mdi-close",
+      title: "配置错误",
+      message: "请检查RapidAPI配置！",
+    },
+    {
+      type: "danger",
+      allow_dismiss: true,
+      newest_on_top: true,
+      placement: {
+        from: "top",
+        align: "right",
+      },
+      offset: {
+        x: 20,
+        y: 20,
+      },
+      spacing: 10,
+      z_index: 1031,
+      delay: 5000,
+      animate: {
+        enter: "animate__animated animate__fadeInDown",
+        exit: "animate__animated animate__fadeOutUp",
+      },
+      onClosed: null,
+    }
+  );
+}
+
+function notify_judge0_clear() {
+  $.notify(
+    {
+      icon: "mdi mdi-check-circle-outline",
+      title: "Judge0配置",
+      message: "Judge0 API密钥已清空！",
+    },
+    {
+      type: "success",
+      allow_dismiss: true,
+      newest_on_top: true,
+      placement: {
+        from: "top",
+        align: "right",
+      },
+      offset: {
+        x: 20,
+        y: 20,
+      },
+      spacing: 10,
+      z_index: 1031,
+      delay: 5000,
+      animate: {
+        enter: "animate__animated animate__fadeInDown",
+        exit: "animate__animated animate__fadeOutUp",
+      },
+      onClosed: null,
+    }
+  );
+}
+
 function notify_invalid_setting() {
   $.notify(
     {
       icon: "mdi mdi-close",
       title: "模型配置错误",
       message: "请完整填写AI模型配置！",
-      url: "",
-      target: "",
     },
     {
       type: "danger",
@@ -410,8 +607,6 @@ function notify_success() {
       icon: "mdi mdi-check-circle-outline",
       title: "模型连接测试",
       message: "恭喜您！测试连接成功！",
-      url: "",
-      target: "",
     },
     {
       type: "success",
@@ -443,8 +638,6 @@ function notify_failed() {
       icon: "mdi mdi-close",
       title: "模型连接测试",
       message: "非常抱歉！测试连接失败！",
-      url: "",
-      target: "",
     },
     {
       type: "danger",

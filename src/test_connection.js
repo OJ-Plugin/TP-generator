@@ -77,3 +77,22 @@ async function testDeepSeekConnection(apiKey, modelName) {
     return false;
   }
 }
+
+async function testJudge0Connection(apiKey) {
+  try {
+    const data = await $.ajax({
+      url: "https://judge0-ce.p.rapidapi.com/languages/105",
+      method: "GET",
+      headers: {
+        "X-RapidAPI-Key": apiKey,
+        "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
+      },
+    });
+
+    const validStates = data.id;
+    return validStates == 105;
+  } catch (error) {
+    console.error("Judge0 Auth test failed:", error);
+    return false;
+  }
+}

@@ -32,6 +32,9 @@
                   <button class="nav-link" id="advance-setting" data-bs-toggle="tab" data-bs-target="#advance" type="button">高级能力</button>
                 </li>
                 <li class="nav-item">
+                  <button class="nav-link" id="judge0-setting" data-bs-toggle="tab" data-bs-target="#judge0" type="button">Judge0设置</button>
+                </li>
+                <li class="nav-item">
                   <button class="nav-link" id="basic-about" data-bs-toggle="tab" data-bs-target="#about" type="button">关于我们</button>
                 </li>
               </ul>
@@ -103,6 +106,23 @@
                     <div class="mb-3">
                       <button type="button" class="btn btn-outline-success me-1" id="btn_test_conn">测试连接</button>
                       <button type="button" class="btn btn-primary me-1" id="save_setting_btn">保 存</button>
+                    </div>
+                  </div>
+
+                  <!-- Judge0 -->
+                  <div class="tab-pane fade" id="judge0" aria-labelledby="judge0-setting">
+                    <div class="mb-3">
+                      <label class="form-label">Judge0 代码运行服务<p style="color: gray; display: inline;">（可选）</p></label>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">APIKey</span>
+                        <input type="password" class="form-control" id="judge0_api_key" placeholder="APIKey" aria-label="APIKey" aria-describedby="APIKey" />
+                      </div>
+                    </div>
+                    <hr />
+                    <!-- 验证连接 -->
+                    <div class="mb-3">
+                      <button type="button" class="btn btn-outline-success me-1" id="judge0_test_conn">测试连接</button>
+                      <button type="button" class="btn btn-primary me-1" id="save_setting_judge0">保 存</button>
                     </div>
                   </div>
 
