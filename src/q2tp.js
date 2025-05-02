@@ -71,7 +71,7 @@ async function question_get_tp(markdownPrompt, nCases = 5, l) {
 
   const systemContent = `
     你是一个智能数据生成器，接收用户提供的 Markdown 编程题描述，任务如下：
-    
+
     1. 理解题意，包括输入输出格式、数据范围、边界条件等；
     2. 生成 ${nCases} 组测试用例数据，每组数据格式如下：
        {
@@ -118,7 +118,13 @@ async function question_get_tp(markdownPrompt, nCases = 5, l) {
       break;
   }
   l.destroy();
-  return unformData;
+  if (unformData == null) {
+    ai_notify_error();
+    return;
+  } else {
+    ai_notify_success();
+    return unformData;
+  }
 }
 
 function save_success() {

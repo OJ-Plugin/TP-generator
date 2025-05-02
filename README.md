@@ -1,7 +1,7 @@
 # TP-generator
 
 <!-- ![Logo](icon.png)   -->
-<div align="center"><img src="./icon.png" width=128/></div>
+<div align="center"><img src="./Promotion-Image.png"/></div>
 <div align="center">
 <h1>TP-generator</h1>
 
@@ -30,9 +30,9 @@ TP-generator is a versatile tool for generating various types of TP (Task Packag
 
 | Operating System | Download Link                              |
 |------------------|--------------------------------------------|
-| Windows          | [Download Windows v0.1.11 (*.exe)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.11/tp-generator_0.1.11_x64-setup.exe) |
-| macOS            | [Download macOS v0.1.11 (*.dmg)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.11/tp-generator_0.1.11_aarch64.dmg) |
-| Linux            | [Download Linux v0.1.11 (*.deb)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.11/tp-generator_0.1.11_amd64.deb) |
+| Windows          | [Download Windows v0.1.12 (*.exe)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.12/TP.Generator_0.1.12_x64-setup.exe) |
+| macOS            | [Download macOS v0.1.12 (*.dmg)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.12/TP.Generator_0.1.12_aarch64.dmg) |
+| Linux            | [Download Linux v0.1.12 (*.deb)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.12/TP.Generator_0.1.12_amd64.deb) |
 
 
 ## Contributing

@@ -1,33 +1,3 @@
-let judge0IDE = document.getElementById("judge0-ide");
-let ideData = "";
-
-window.onmessage = function (e) {
-  if (!e.data) {
-    return;
-  }
-
-  if (e.data.event === "initialised") {
-    var temp_state = window.localStorage.getItem("temp_state");
-    const apiKey = temp_state ? window.localStorage.getItem("judge0") : window.sessionStorage.getItem("judge0");
-    judge0IDE.contentWindow.postMessage(
-      {
-        action: "set",
-        api_key: apiKey,
-        source_code: '#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "Hello World!" << endl;\n    return 0;\n}',
-        language_id: 54,
-        flavor: "CE",
-        stdin: "Hi from TP Generator!",
-        stdout: "",
-        compiler_options: "",
-        command_line_arguments: "",
-      },
-      "*"
-    );
-  } else {
-    ideData = JSON.stringify(e.data, null, 2);
-  }
-};
-
 document.getElementById("run_code").addEventListener("click", async function () {
   $(this).attr("disable", "true");
   var l = $(this).lyearloading({
@@ -35,8 +5,37 @@ document.getElementById("run_code").addEventListener("click", async function () 
     spinnerSize: "nm",
   });
 
-  await judge0IDE.contentWindow.postMessage({ action: "run" }, "*");
-  l.destroy();
+  const sourceCode = btoa(window.editor.getValue());
+  const input = btoa(window.inputEditor.getValue());
+  const temp_state = localStorage.getItem("temp_state") === "true";
+  const storage = temp_state ? sessionStorage : localStorage;
+  const apiKey = storage.getItem("judge0");
+
+  if (apiKey == "" || apiKey == null) {
+    notify_invalid_setting_judge0();
+    l.destroy();
+    return;
+  }
+
+  const settings = {
+    async: true,
+    crossDomain: true,
+    url: "https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=true&wait=true",
+    method: "POST",
+    headers: {
+      "x-rapidapi-key": apiKey,
+      "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
+      "Content-Type": "application/json",
+    },
+    processData: false,
+    data: '{\r\n    "language_id": 54,\r\n    "source_code": "' + sourceCode + '",\r\n    "stdin": "' + input + '"\r\n}',
+  };
+
+  $.ajax(settings).done(function (response) {
+    const out = response.stdout || response.stderr || "No output.";
+    window.outputEditor.setValue(atob(out));
+    l.destroy();
+  });
 });
 
 document.getElementById("generate_btn").addEventListener("click", async function () {
@@ -46,37 +45,32 @@ document.getElementById("generate_btn").addEventListener("click", async function
     spinnerSize: "nm",
   });
 
-  judge0IDE.contentWindow.postMessage({ action: "get" }, "*");
-  setTimeout(async function () {
-    console.log(ideData);
-    let FideData = JSON.parse(ideData);
-    const source_code = FideData["source_code"];
-    console.log("source code:", source_code);
+  const source_code = window.editor.getValue();
 
-    const ranger = document.getElementById("ranger").value;
-    const tps = await example_get_tp(source_code, ranger, l);
-
-    const res = JSON.parse(tps);
-    var in_data = "<span>Input数据</span>",
-      out_data = "<span>Output数据</span>",
-      count = 1;
-    res.forEach((c) => {
-      in_data += `<div class="input-group mb-3">
-                <span class="input-group-text">${count}</span>
-                <input type="text" class="form-control" id="in_val_${count}" value="${c.in}">
-                </div>`;
-      out_data += `<div class="input-group mb-3">
-                <span class="input-group-text">${count}</span>
-                <input type="text" class="form-control" id="out_val_${count}" value="${c.out}">
-                </div>`;
-      count++;
-    });
-    document.getElementById("in_box").innerHTML = in_data;
-    document.getElementById("out_box").innerHTML = out_data;
-  }, 1500);
+  const ranger = document.getElementById("ranger").value;
+  const tps = await example_get_tp(source_code, ranger, l);
+  console.log("tps:", tps);
+  const res = JSON.parse(tps);
+  var in_data = "<span>Input数据</span>",
+    out_data = "<span>Output数据</span>",
+    count = 1;
+  res.forEach((c) => {
+    in_data += `<div class="input-group mb-3">
+        <span class="input-group-text">${count}</span>
+        <input type="text" class="form-control" id="in_val_${count}" value="${c.in}">
+        </div>`;
+    out_data += `<div class="input-group mb-3">
+        <span class="input-group-text">${count}</span>
+        <input type="text" class="form-control" id="out_val_${count}" value="${c.out}">
+        </div>`;
+    count++;
+  });
+  document.getElementById("in_box").innerHTML = in_data;
+  document.getElementById("out_box").innerHTML = out_data;
 });
 
 async function example_get_tp(sourceCode, nCases = 5, l) {
+  console.log("Start get tps from example.");
   const temp_state = localStorage.getItem("temp_state") === "true";
   const storage = temp_state ? sessionStorage : localStorage;
   const provider = storage.getItem("provider");
@@ -121,7 +115,7 @@ async function example_get_tp(sourceCode, nCases = 5, l) {
       content: sourceCode,
     },
   ];
-
+  console.log("provider", provider);
   let unformData = "";
   switch (provider) {
     case "openai":
@@ -137,8 +131,15 @@ async function example_get_tp(sourceCode, nCases = 5, l) {
     default:
       break;
   }
+  console.log(unformData);
   l.destroy();
-  return unformData;
+  if (unformData == null) {
+    ai_notify_error();
+    return;
+  } else {
+    return unformData;
+    // ai_notify_success();
+  }
 }
 
 document.getElementById("save_btn").addEventListener("click", async function () {
@@ -239,6 +240,37 @@ function save_error() {
       },
       onClosed: null,
       mouse_over: null,
+    }
+  );
+}
+
+function notify_invalid_setting_judge0() {
+  $.notify(
+    {
+      icon: "mdi mdi-close",
+      title: "配置错误",
+      message: "请检查RapidAPI配置！",
+    },
+    {
+      type: "danger",
+      allow_dismiss: true,
+      newest_on_top: true,
+      placement: {
+        from: "top",
+        align: "right",
+      },
+      offset: {
+        x: 20,
+        y: 20,
+      },
+      spacing: 10,
+      z_index: 1031,
+      delay: 5000,
+      animate: {
+        enter: "animate__animated animate__fadeInDown",
+        exit: "animate__animated animate__fadeOutUp",
+      },
+      onClosed: null,
     }
   );
 }

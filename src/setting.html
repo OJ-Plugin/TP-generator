@@ -55,6 +55,26 @@
                       <button type="button" class="btn btn-primary me-1" onclick="save_temp()">确 定</button>
                       <!-- <button type="button" class="btn btn-default" onclick="javascript:history.back(-1);return false;">返 回</button> -->
                     </div>
+                    <hr />
+                    <div class="mb-3">
+                      <h4 class="form-label">系统说明</h4>
+                      <hr>
+                      <h5>高级能力说明</h5>
+                      <span>1. 高级能力目前仅支持Openrouter的AI模型配置。<br /></span>
+                      <span>2. 模型列表中为免费使用模型，能力允许可以自行使用付费模型，费用由Openrouter收取。<br /></span>
+                      <span>3. API Key创建地址：<a href="https://openrouter.ai/settings/keys" target="_blank">https://openrouter.ai/settings/keys</a><br /></span>
+                      <span>4. AI模型推荐选择：<p style="color: #2600ff; display: inline;">qwen/qwen-2.5-coder-32b-instruct:free</p></span>
+                      <hr />
+                      <h5>Judge0设置说明</h5>
+                      <span>1. Judge0服务用于“示例代码生成测试点”中的“运行代码”功能，可选择放弃使用该功能。<br /></span>
+                      <span>2. Judge0服务使用RapidAPI进行代码运行，平台拥有免费和付费计划，具体请见<a href="https://rapidapi.com/judge0-official/api/judge0-ce/pricing" target="_blank">详情</a><br /></span>
+                      <span>3. API Key创建地址：<a href="https://rapidapi.com/developer/apps/new-app" target="_blank">https://rapidapi.com/developer/apps/new-app</a><br /></span>
+                      <span
+                        >4. Judge0服务由创建的APP生成API Key，可在
+                        <p style="color: #0096ff; display: inline;">https://rapidapi.com/developer/authorization/{YOUR_APP_ID}</p>
+                        创建API Key<br
+                      /></span>
+                    </div>
                   </div>
 
                   <!-- 高级能力 -->
@@ -112,7 +132,10 @@
                   <!-- Judge0 -->
                   <div class="tab-pane fade" id="judge0" aria-labelledby="judge0-setting">
                     <div class="mb-3">
-                      <label class="form-label">Judge0 代码运行服务<p style="color: gray; display: inline;">（可选）</p></label>
+                      <label class="form-label"
+                        >Judge0 代码运行服务
+                        <p style="color: gray; display: inline">（可选）</p></label
+                      >
                       <div class="input-group mb-3">
                         <span class="input-group-text">APIKey</span>
                         <input type="password" class="form-control" id="judge0_api_key" placeholder="APIKey" aria-label="APIKey" aria-describedby="APIKey" />
