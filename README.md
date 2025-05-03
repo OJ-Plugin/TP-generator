@@ -16,9 +16,9 @@
 
 ## Introduction  
   
-TP-generator (Task Package Generator) is a powerful cross-platform desktop application designed to automate the creation of test points for programming problems. It leverages AI services to analyze problems and generate appropriate test cases, significantly reducing the time and effort required to create comprehensive test suites.  
-  
-The application is built using Tauri, combining web technologies with Rust for excellent performance and cross-platform compatibility. It offers two primary methods of generating test points and includes code execution capabilities for verification purposes.  
+TP generator is an AI-based test point generation tool designed for programming education and algorithm competitions. It can automatically analyze programming topic descriptions or sample codes, generate test cases that meet the requirements, and greatly improve the efficiency of teaching and competition preparation.
+
+As a cross-platform desktop application, TP generator is built using the Tauri framework, providing a lightweight, high-performance user experience and supporting Windows, macOS, and Linux operating systems.
   
 ## Key Features  
   
