@@ -16,6 +16,38 @@
     <!--对话框插件css-->
     <link rel="stylesheet" type="text/css" href="js/jquery-confirm/jquery-confirm.min.css" />
     <link rel="stylesheet" type="text/css" href="./statics/css/style.min.css" />
+    <style>
+      .title-bar {
+        /* height: 100%; */
+        background-color: rgb(120, 120, 190);
+        color: white;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 0 10px;
+        user-select: none;
+        -webkit-app-region: drag; /* Make the title bar draggable */
+      }
+
+      .title-bar button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 26px;
+        margin-left: 10px;
+        cursor: pointer;
+        -webkit-app-region: no-drag; /* Prevent buttons from being draggable */
+      }
+
+      /* Add hover effects for buttons */
+      .title-bar button:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      #closeBtn:hover {
+        background-color: rgb(255, 0, 0);
+      }
+    </style>
   </head>
 
   <body class="lyear-index">
@@ -24,7 +56,7 @@
         <!--左侧导航-->
         <aside class="lyear-layout-sidebar">
           <!-- logo -->
-          <div id="logo" class="sidebar-header">
+          <div id="logo" class="sidebar-header" style="background-color: rgb(120, 120, 190)">
             <a href="./index.html"><img src="./statics/images/page_bar_logo.png" alt="" /></a>
           </div>
           <div class="lyear-layout-sidebar-info lyear-scroll">
@@ -69,7 +101,7 @@
         <!--End 左侧导航-->
 
         <!--头部信息-->
-        <header class="lyear-layout-header">
+        <header class="lyear-layout-header title-bar">
           <nav class="navbar">
             <div class="navbar-left">
               <!-- <div class="lyear-aside-toggler">
@@ -78,6 +110,13 @@
                 <span class="lyear-toggler-bar"></span>
               </div> -->
             </div>
+            <!-- <ul class="navbar-right d-flex align-items-center">
+              <div>
+                <button id="minimizeBtn">−</button>
+                <button id="maximizeBtn">□</button>
+                <button id="closeBtn">×</button>
+              </div>
+            </ul> -->
           </nav>
         </header>
         <!--End 头部信息-->
@@ -103,6 +142,33 @@
     <script type="text/javascript" src="js/main.min.js"></script>
     <script type="text/javascript" src="./statics/js/index.min.js"></script>
     <!-- <script type="module" src="./check_update.js"></script> -->
+    <!-- <script type="module">
+      const { event, window: tauriWindow, path } = window.__TAURI__;
+      let fullState = true;
+
+      // Minimize window
+      document.getElementById("minimizeBtn").addEventListener("click", async function () {
+        await appWindow.minimize();
+      });
+
+      // Maximize window
+      document.getElementById("maximizeBtn").addEventListener("click", async function () {
+        await appWindow.maximize();
+        if (fullState) {
+          await appWindow.setFullscreen(false);
+          fullState = false;
+        } else {
+          await appWindow.setFullscreen(true);
+          fullState = true;
+        }
+      });
+
+      // Close window
+      document.getElementById("closeBtn").addEventListener("click", async function () {
+        await appWindow.close();
+      });
+    </script> -->
+
     <script type="text/javascript">
       // 检测移动设备
       function isMobileDevice() {

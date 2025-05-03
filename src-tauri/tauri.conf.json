@@ -13,6 +13,7 @@
         "title": "TP Generator",
         "width": 1300,
         "height": 830,
+        "decorations": true,
         "maximized": true
       }
     ],
