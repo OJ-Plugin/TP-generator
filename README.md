@@ -55,9 +55,9 @@ TP-generator is available for Windows, macOS, and Linux operating systems. Downl
   
 | Operating System | Download Link                              |  
 |------------------|--------------------------------------------|  
-| Windows          | [Download Windows v0.1.12 (*.exe)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.12/TP.Generator_0.1.12_x64-setup.exe) |  
-| macOS            | [Download macOS v0.1.12 (*.dmg)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.12/TP.Generator_0.1.12_aarch64.dmg) |  
-| Linux            | [Download Linux v0.1.12 (*.deb)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.12/TP.Generator_0.1.12_amd64.deb) |  
+| Windows          | [Download Windows v0.1.14 (*.exe)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.14/TP.Generator_0.1.14_x64-setup.exe) |  
+| macOS            | [Download macOS v0.1.14 (*.dmg)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.14/TP.Generator_0.1.14_aarch64.dmg) |  
+| Linux            | [Download Linux v0.1.14 (*.deb)](https://github.com/OJ-Plugin/TP-generator/releases/download/v0.1.14/TP.Generator_0.1.14_amd64.deb) |  
   
 For the latest releases and additional formats, visit the [GitHub releases page](https://github.com/OJ-Plugin/TP-generator/releases).  
   
