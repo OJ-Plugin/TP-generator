@@ -28,7 +28,7 @@ document.getElementById("run_code").addEventListener("click", async function () 
       "Content-Type": "application/json",
     },
     processData: false,
-    data: '{\r\n    "language_id": 54,\r\n    "source_code": "' + sourceCode + '",\r\n    "stdin": "' + input + '"\r\n}',
+    data: '{\r\n    "language_id": 105,\r\n    "source_code": "' + sourceCode + '",\r\n    "stdin": "' + input + '"\r\n}',
   };
 
   $.ajax(settings).done(function (response) {
