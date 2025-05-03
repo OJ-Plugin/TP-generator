@@ -80,7 +80,7 @@ jobs:
         run: |
           brew install imagemagick
           mkdir -p src-tauri/icons/
-          for size in 32 64 128 256 512 1024; do
+          for size in 256 512 1024; do
             magick icon.png -resize ${size}x${size} -define png:color-type=6 src-tauri/icons/${size}x${size}.png
           done
           cp src-tauri/icons/256x256.png src-tauri/icons/128x128@2x.png
@@ -93,7 +93,7 @@ jobs:
         if: matrix.platform == 'ubuntu-latest'
         run: |
           mkdir -p src-tauri/icons/
-          for size in 32 64 128 256 512 1024; do
+          for size in 256 512 1024; do
             convert icon.png -resize ${size}x${size} -define png:color-type=6 src-tauri/icons/${size}x${size}.png
           done
           # 模拟 @2x 图标（Tauri 需要）
@@ -103,7 +103,7 @@ jobs:
           # 设置主图标（非必须，但推荐）
           cp src-tauri/icons/512x512.png src-tauri/icons/icon.png
           # 生成 ico/icns（确保打包成功）
-          convert src-tauri/icons/128x128.png src-tauri/icons/256x256.png src-tauri/icons/icon.ico
+          convert src-tauri/icons/512x512.png src-tauri/icons/256x256.png src-tauri/icons/icon.ico
           cp src-tauri/icons/icon.png src-tauri/icons/icon.icns
 
       # Windows 图标处理
@@ -112,9 +112,9 @@ jobs:
         run: |
           choco install imagemagick -y
           mkdir src-tauri/icons
-          magick icon.png -resize 128x128 -define png:color-type=6 src-tauri/icons/128x128.png
           magick icon.png -resize 256x256 -define png:color-type=6 src-tauri/icons/256x256.png
-          magick src-tauri/icons/128x128.png src-tauri/icons/256x256.png src-tauri/icons/icon.ico
+          magick icon.png -resize 512x512 -define png:color-type=6 src-tauri/icons/512x512.png
+          magick src-tauri/icons/512x512.png src-tauri/icons/256x256.png src-tauri/icons/icon.ico
 
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
