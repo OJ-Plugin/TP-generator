@@ -5,11 +5,12 @@ document.getElementById("run_code").addEventListener("click", async function () 
     spinnerSize: "nm",
   });
 
-  const sourceCode = btoa(window.editor.getValue());
+  const sourceCode = btoa(removeNonBase64Characters(window.editor.getValue()));
   const input = btoa(window.inputEditor.getValue());
   const temp_state = localStorage.getItem("temp_state") === "true";
   const storage = temp_state ? sessionStorage : localStorage;
   const apiKey = storage.getItem("judge0");
+  console.log("Code run started.");
 
   if (apiKey == "" || apiKey == null) {
     notify_invalid_setting_judge0();
@@ -56,13 +57,13 @@ document.getElementById("generate_btn").addEventListener("click", async function
     count = 1;
   res.forEach((c) => {
     in_data += `<div class="input-group mb-3">
-        <span class="input-group-text">${count}</span>
-        <input type="text" class="form-control" id="in_val_${count}" value="${c.in}">
-        </div>`;
+                <span class="input-group-text">${count}</span>
+                <textarea class="form-control" id="in_val_${count}" rows="1">${c.in}</textarea>
+              </div>`;
     out_data += `<div class="input-group mb-3">
-        <span class="input-group-text">${count}</span>
-        <input type="text" class="form-control" id="out_val_${count}" value="${c.out}">
-        </div>`;
+                  <span class="input-group-text">${count}</span>
+                  <textarea class="form-control" id="out_val_${count}" rows="1">${c.out}</textarea>
+                </div>`;
     count++;
   });
   document.getElementById("in_box").innerHTML = in_data;
@@ -84,7 +85,7 @@ async function example_get_tp(sourceCode, nCases = 5, l) {
          "in": "一组输入字符串",
          "out": "对应输出字符串"
        }
-    3. 所有返回内容必须为严格有效的 JSON 数组，形如：
+    3. 所有返回内容必须为严格有效的 JSON 数组，请注意一定是数组，形如：
     [
       { "in": "1 2", "out": "3" },
       { "in": "0 0", "out": "0" }
@@ -101,8 +102,10 @@ async function example_get_tp(sourceCode, nCases = 5, l) {
       { "in": "", "out": "0" }
     ]
     8. 如果代码的运行结果是固定的内容，则忽略生成数据的组数，只输出一组数据，形如：
-    { "in": "", "out": "3" }
+    [{ "in": "", "out": "3" }]
     9. 如果代码有误请忽略错误，严禁提出修改建议或提示用户代码存在问题，并在错误代码的基础上理解代码含义，并给出符合数据要求的输入输出内容，内容格式严格遵守第2~5条规则。
+    10. 针对所有的题目，在其题目所指定的范围内（若未规定范围则代表没有限制），需要给出极端数据的测试点数据以确保编程题目的可靠性。
+    11. 如果输入或输出包含多行内容，则用%5Cn进行换行
     `.trim();
 
   const messages = [
@@ -137,8 +140,8 @@ async function example_get_tp(sourceCode, nCases = 5, l) {
     ai_notify_error();
     return;
   } else {
-    return unformData;
     // ai_notify_success();
+    return unformData;
   }
 }
 
@@ -179,6 +182,21 @@ document.getElementById("save_btn").addEventListener("click", async function () 
     save_error();
   }
 });
+
+/**
+ * removeNonBase64Characters
+ * @param {string} str - 输入字符串
+ * @returns {string} - 处理后的字符串
+ */
+function removeNonBase64Characters(str) {
+  if (typeof str !== "string") {
+    return "";
+  }
+
+  // 删除中文字符和中文标点符号
+  // 保留英文字母、数字、换行符和英文标点符号
+  return str.replace(/[\u4E00-\u9FFF\u3000-\u303F\uFF00-\uFFEF]/g, "");
+}
 
 function save_success() {
   $.notify(

@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="./statics/css/animate.min.css" />
     <link rel="stylesheet" type="text/css" href="./statics/js/bootstrap-multitabs/multitabs.min.css" />
     <!--对话框插件css-->
-    <link rel="stylesheet" type="text/css" href="js/jquery-confirm/jquery-confirm.min.css" />
+    <link rel="stylesheet" href="./statics/js/jquery-confirm/jquery-confirm.min.css" />
     <link rel="stylesheet" type="text/css" href="./statics/css/style.min.css" />
     <style>
       .title-bar {
@@ -80,12 +80,6 @@
                     示例代码生成测试点
                   </a>
                 </li>
-                <li>
-                  <a class="multitabs" href="./setting.html">
-                    <i class="mdi mdi-cog"></i>
-                    系统设置
-                  </a>
-                </li>
               </ul>
             </nav>
 
@@ -110,13 +104,6 @@
                 <span class="lyear-toggler-bar"></span>
               </div> -->
             </div>
-            <!-- <ul class="navbar-right d-flex align-items-center">
-              <div>
-                <button id="minimizeBtn">−</button>
-                <button id="maximizeBtn">□</button>
-                <button id="closeBtn">×</button>
-              </div>
-            </ul> -->
           </nav>
         </header>
         <!--End 头部信息-->
@@ -136,38 +123,15 @@
     <script type="text/javascript" src="./statics/js/bootstrap-multitabs/multitabs.min.js"></script>
     <script type="text/javascript" src="./statics/js/jquery.cookie.min.js"></script>
     <!--引入loading插件js-->
-    <script type="text/javascript" src="js/lyear-loading.js"></script>
+    <script type="text/javascript" src="./statics/js/lyear-loading.js"></script>
     <!--对话框插件js-->
-    <script type="text/javascript" src="js/jquery-confirm/jquery-confirm.min.js"></script>
-    <script type="text/javascript" src="js/main.min.js"></script>
+    <script type="text/javascript" src="./statics/js/jquery-confirm/jquery-confirm.min.js"></script>
+    <!-- 通知插件 -->
+    <script type="text/javascript" src="./statics/js/bootstrap-notify.min.js"></script>
+    <script type="text/javascript" src="./statics/js/main.min.js"></script>
     <script type="text/javascript" src="./statics/js/index.min.js"></script>
-    <!-- <script type="module" src="./check_update.js"></script> -->
-    <!-- <script type="module">
-      const { event, window: tauriWindow, path } = window.__TAURI__;
-      let fullState = true;
 
-      // Minimize window
-      document.getElementById("minimizeBtn").addEventListener("click", async function () {
-        await appWindow.minimize();
-      });
-
-      // Maximize window
-      document.getElementById("maximizeBtn").addEventListener("click", async function () {
-        await appWindow.maximize();
-        if (fullState) {
-          await appWindow.setFullscreen(false);
-          fullState = false;
-        } else {
-          await appWindow.setFullscreen(true);
-          fullState = true;
-        }
-      });
-
-      // Close window
-      document.getElementById("closeBtn").addEventListener("click", async function () {
-        await appWindow.close();
-      });
-    </script> -->
+    <script type="text/javascript" src="./index.js"></script>
 
     <script type="text/javascript">
       // 检测移动设备
@@ -197,6 +161,14 @@
           </div>
         `;
         }
+      });
+    </script>
+
+    <script type="text/javascript" src="./check_update.js"></script>
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", () => {
+        console.log("Content is ready to load!");
+        checkUpdate();
       });
     </script>
   </body>

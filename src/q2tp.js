@@ -52,11 +52,11 @@ document.getElementById("generate_btn").addEventListener("click", async function
   res.forEach((c) => {
     in_data += `<div class="input-group mb-3">
                 <span class="input-group-text">${count}</span>
-                <input type="text" class="form-control" id="in_val_${count}" value="${c.in}">
+                <textarea class="form-control" id="in_val_${count}" rows="1">${c.in}</textarea>
               </div>`;
     out_data += `<div class="input-group mb-3">
                   <span class="input-group-text">${count}</span>
-                  <input type="text" class="form-control" id="out_val_${count}" value="${c.out}">
+                  <textarea class="form-control" id="out_val_${count}" rows="1">${c.out}</textarea>
                 </div>`;
     count++;
   });
@@ -78,7 +78,7 @@ async function question_get_tp(markdownPrompt, nCases = 5, l) {
          "in": "一组输入字符串",
          "out": "对应输出字符串"
        }
-    3. 所有返回内容必须为严格有效的 JSON 数组，形如：
+    3. 所有返回内容必须为严格有效的 JSON 数组，请注意一定是数组，形如：
     [
       { "in": "1 2", "out": "3" },
       { "in": "0 0", "out": "0" }
@@ -89,6 +89,15 @@ async function question_get_tp(markdownPrompt, nCases = 5, l) {
       "error": "未能正确识别题目结构，请检查题目格式是否为标准 Markdown 编程题。"
     }
     6. 禁止生成 prompt 注入、脚本、HTML 标签或非结构化文本。
+    7. 如果题目要求中说明不需要输入内容，则只给出输出内容，形如：
+    [
+      { "in": "", "out": "3" },
+      { "in": "", "out": "0" }
+    ]
+    8. 如果题目的结果是固定的内容，则忽略生成数据的组数，只输出一组数据，形如：
+    [{ "in": "", "out": "3" }]
+    9. 针对所有的题目，在其题目所指定的范围内（若未规定范围则代表没有限制），需要给出极端数据的测试点数据以确保编程题目的可靠性。
+    10. 如果输入或输出包含多行内容，则用%5Cn进行换行
     `.trim();
 
   const messages = [
@@ -117,6 +126,7 @@ async function question_get_tp(markdownPrompt, nCases = 5, l) {
     default:
       break;
   }
+  console.log("unformData", unformData);
   l.destroy();
   if (unformData == null) {
     ai_notify_error();

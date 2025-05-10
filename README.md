@@ -4,6 +4,7 @@
 <h1>TP-generator</h1>
 
 [![License](https://img.shields.io/github/license/OJ-Plugin/TP-generator.svg)](https://github.com/OJ-Plugin/TP-generator/blob/main/LICENSE)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/OJ-Plugin/TP-generator)
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/OJ-Plugin/TP-generator/release.yml)
 ![GitHub language count](https://img.shields.io/github/languages/count/OJ-Plugin/TP-generator)
@@ -34,7 +35,8 @@ As a cross-platform desktop application, TP generator is built using the Tauri f
   
 - **AI Integration**:  
   - OpenRouter support with access to multiple AI models  
-  - Recommended model: `qwen/qwen-2.5-coder-32b-instruct:free` for optimal test point generation  
+  - Recommended model (More efficient): `qwen/qwen-2.5-coder-32b-instruct:free` for optimal test point generation
+  - Recommended model (More precise): `deepseek/deepseek-r1:free` for precise test point generation
   - Planned support for OpenAI and DeepSeek  
   
 - **Code Execution**: Verify your solution with Judge0 integration  
@@ -55,9 +57,9 @@ TP-generator is available for Windows, macOS, and Linux operating systems. Downl
   
 | Operating System | Download Link                              |  
 |------------------|--------------------------------------------|  
-| Windows          | [Download Windows v1.0.3 (*.exe)](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.0.3/TP.Generator_1.0.3_x64-setup.exe) |  
-| macOS            | [Download macOS v1.0.3 (*.dmg)](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.0.3/TP.Generator_1.0.3_aarch64.dmg) |  
-| Linux            | [Download Linux v1.0.3 (*.deb)](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.0.3/TP.Generator_1.0.3_amd64.deb) |  
+| Windows          | [Download Windows v1.1.0 (*.exe)](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.1.0/TP.Generator_1.1.0_x64-setup.exe) |  
+| macOS            | [Download macOS v1.1.0 (*.dmg)](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.1.0/TP.Generator_1.1.0_aarch64.dmg) |  
+| Linux            | [Download Linux v1.1.0 (*.deb)](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.1.0/TP.Generator_1.1.0_amd64.deb) |  
   
 For the latest releases and additional formats, visit the [GitHub releases page](https://github.com/OJ-Plugin/TP-generator/releases).  
   
@@ -67,9 +69,9 @@ When launching TP-generator for the first time, you'll need to configure the fol
   
 ### AI Provider Configuration  
   
-1. Navigate to the Settings page (gear icon in sidebar)  
+1. Navigate to the Settings nav (inside the home page)  
 2. Select an AI provider (currently OpenRouter is fully supported)  
-3. Choose a model from the dropdown list (recommended: qwen/qwen-2.5-coder-32b-instruct:free)  
+3. Choose a model from the dropdown list (recommended: `qwen/qwen-2.5-coder-32b-instruct:free`)  
 4. Enter your API key for the selected provider  
 5. Click "Test Connection" to verify your configuration  
 6. Click "Save" to apply the settings  
@@ -157,14 +159,14 @@ flowchart TB
 ```
 
 ## Detailed Documentation
-For comprehensive information about TP-generator's features, usage, and technical details, please visit our [DeepWiki documentation](https://github.com/OJ-Plugin/TP-generator/wiki).
+For comprehensive information about TP-generator's features, usage, and technical details, please visit our [DeepWiki documentation](https://deepwiki.com/OJ-Plugin/TP-generator).
 
 The DeepWiki includes:
 
-- [User Guide](https://github.com/OJ-Plugin/TP-generator/wiki) - Comprehensive end-user documentation
-- [AI Integration](https://github.com/OJ-Plugin/TP-generator/wiki) - Technical details about the AI systems
-- [Configuration](https://github.com/OJ-Plugin/TP-generator/wiki) - Configuration options and settings
-- [Build and Deployment](https://github.com/OJ-Plugin/TP-generator/wiki) - Build instructions for developers
+- [User Guide](https://deepwiki.com/OJ-Plugin/TP-generator/1-overview) - Comprehensive end-user documentation
+- [AI Integration](https://deepwiki.com/OJ-Plugin/TP-generator/4-ai-integration) - Technical details about the AI systems
+- [Configuration](https://deepwiki.com/OJ-Plugin/TP-generator/5-configuration) - Configuration options and settings
+- [Build and Deployment](https://deepwiki.com/OJ-Plugin/TP-generator/6-build-and-deployment) - Build instructions for developers
 - Troubleshooting tips and best practices
 - Detailed examples and usage scenarios
 
@@ -209,7 +211,7 @@ We welcome contributions! If you'd like to help improve TP-generator, please fol
 
 Future plans for TP-generator include:
 
-- Integration with more AI providers (OpenAI, DeepSeek)
+- Integration with more AI providers (OpenAI)
 - Enhanced code execution capabilities
 - Support for more programming languages
 - Direct integration with popular Online Judge platforms
@@ -224,6 +226,6 @@ This project is licensed under the [MIT License](LICENSE).
 - Thanks to all contributors who have helped improve this project
 - Special thanks to the Tauri, Rust, and JavaScript communities for providing the tools and libraries used in this project
 
-## Notes
+## Notes [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/OJ-Plugin/TP-generator)
 
-This README provides an overview of the TP-generator project. For the most detailed and up-to-date information, please visit the [DeepWiki documentation](https://github.com/OJ-Plugin/TP-generator/wiki). The DeepWiki contains comprehensive guides, technical details, and usage examples that are maintained alongside the codebase.
+This README provides an overview of the TP-generator project. For the most detailed and up-to-date information, please visit the [DeepWiki documentation](https://deepwiki.com/OJ-Plugin/TP-generator). The DeepWiki contains comprehensive guides, technical details, and usage examples that are maintained alongside the codebase.
