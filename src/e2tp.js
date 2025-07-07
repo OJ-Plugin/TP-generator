@@ -34,11 +34,13 @@ document.getElementById("run_code").addEventListener("click", async function () 
   };
 
   $.ajax(settings).done(function (response) {
-    const out = response.stdout || response.stderr || "<--- System Notification ---> \n\nNo output.\n\n<--- End of Notification --->";
+    const out = response.stdout || encode64(response.stderr) || encode64("<--- System Notification ---> \n\nNo output.\n\n<--- End of Notification --->");
     window.outputEditor.setValue(decode64(out));
     l.destroy();
   });
 });
+
+var generate_state = true
 
 document.getElementById("generate_btn").addEventListener("click", async function () {
   $(this).attr("disable", "true");
@@ -54,33 +56,40 @@ document.getElementById("generate_btn").addEventListener("click", async function
   const tps_in = await example_get_tp(source_code, normalRatio, extreamRatio, l);
   const tps_input_form = JSON.parse(tps_in);
 
-  let sourceCode_base64 = encode64(source_code);
-  let inputArr = tps_input_form.map(item => encode64(item.in));
-  let tps_output_form = await get_output(sourceCode_base64, inputArr);
+  if (generate_state) {
+    let sourceCode_base64 = encode64(source_code);
+    let inputArr = tps_input_form.map(item => encode64(item.in));
+    let tps_output_form = await get_output(sourceCode_base64, inputArr);
 
-  let res = []
-  for (let index = 0; index < tps_input_form.length; index++) {
-    res.push({in: tps_input_form[index].in, out: decode64(tps_output_form[index])});
-  }
+    let res = []
+    for (let index = 0; index < tps_input_form.length; index++) {
+      res.push({ in: tps_input_form[index].in, out: decode64(tps_output_form[index]) });
+    }
 
-  console.log("测试点生成结束：", res);
-  
-  var in_data = "<span>Input数据</span>",
-    out_data = "<span>Output数据</span>",
-    count = 1;
-  res.forEach((c) => {
-    in_data += `<div class="input-group mb-3">
-                <span class="input-group-text">${count}</span>
-                <textarea class="form-control" id="in_val_${count}" rows="1">${c.in}</textarea>
-              </div>`;
-    out_data += `<div class="input-group mb-3">
+    console.log("测试点生成结束：", res);
+
+    if (generate_state) {
+      l.destroy();
+    }
+
+    var in_data = "<span>Input数据</span>",
+      out_data = "<span>Output数据</span>",
+      count = 1;
+    res.forEach((c) => {
+      in_data += `<div class="input-group mb-3">
                   <span class="input-group-text">${count}</span>
-                  <textarea class="form-control" id="out_val_${count}" rows="1">${c.out}</textarea>
+                  <textarea class="form-control" id="in_val_${count}" rows="1">${c.in}</textarea>
                 </div>`;
-    count++;
-  });
-  document.getElementById("in_box").innerHTML = in_data;
-  document.getElementById("out_box").innerHTML = out_data;
+      out_data += `<div class="input-group mb-3">
+                    <span class="input-group-text">${count}</span>
+                    <textarea class="form-control" id="out_val_${count}" rows="1">${c.out}</textarea>
+                  </div>`;
+      count++;
+    });
+    document.getElementById("in_box").innerHTML = in_data;
+    document.getElementById("out_box").innerHTML = out_data;
+  }
+  generate_state = true
 });
 
 async function example_get_tp(sourceCode, normalRatio = 5, extreamRatio = 5, l) {
@@ -145,8 +154,9 @@ async function example_get_tp(sourceCode, normalRatio = 5, extreamRatio = 5, l) 
       break;
   }
   console.log(unformData);
-  l.destroy();
   if (unformData == null) {
+    l.destroy();
+    generate_state = false;
     ai_notify_error();
     return;
   } else {

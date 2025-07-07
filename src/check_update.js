@@ -1,4 +1,4 @@
-const current_tag = [1, 2, 1];
+const current_tag = [1, 2, 2];
 
 function checkUpdate() {
   var l = $("body").lyearloading({

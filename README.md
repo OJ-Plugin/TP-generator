@@ -15,13 +15,13 @@
 
 </div>
 
-## Introduction  
+## Introduction
   
 TP generator is an AI-based test point generation tool designed for programming education and algorithm competitions. It can automatically analyze programming topic descriptions or sample codes, generate test cases that meet the requirements, and greatly improve the efficiency of teaching and competition preparation.
 
 As a cross-platform desktop application, TP generator is built using the Tauri framework, providing a lightweight, high-performance user experience and supporting Windows, macOS, and Linux operating systems.
   
-## Key Features  
+## Key Features
   
 - **Question to Test Point (Q2TP)**: Generate test points from problem descriptions written in Markdown  
   - Input detailed problem specifications, constraints, and examples  
@@ -50,23 +50,23 @@ As a cross-platform desktop application, TP generator is built using the Tauri f
   
 - **Local File Export**: Save generated test points as standard `.in` and `.out` files for use with Online Judge systems  
   
-## Installation  
+## Installation
   
 TP-generator is available for Windows, macOS, and Linux operating systems. Download the appropriate installer for your platform:  
   
 | Operating System | Download Link                              |  
 |------------------|--------------------------------------------|  
-| Windows          | [Download Windows v1.2.1 (*.exe)](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.2.1/TP.Generator_1.2.1_x64-setup.exe) |  
-| macOS            | [Download macOS v1.2.1 (*.dmg)](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.2.1/TP.Generator_1.2.1_aarch64.dmg) |  
-| Linux            | [Download Linux v1.2.1 (*.deb)](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.2.1/TP.Generator_1.2.1_amd64.deb) |  
+| Windows          | [Download Windows v1.2.2 (*.exe)](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.2.2/TP.Generator_1.2.2_x64-setup.exe) |  
+| macOS            | [Download macOS v1.2.2 (*.dmg)](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.2.2/TP.Generator_1.2.2_aarch64.dmg) |  
+| Linux            | [Download Linux v1.2.2 (*.deb)](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.2.2/TP.Generator_1.2.2_amd64.deb) |  
   
 For the latest releases and additional formats, visit the [GitHub releases page](https://github.com/OJ-Plugin/TP-generator/releases).  
   
-## First-Time Setup  
+## First-Time Setup
   
 When launching TP-generator for the first time, you'll need to configure the following settings:  
   
-### AI Provider Configuration  
+### AI Provider Configuration
   
 1. Navigate to the Settings nav (inside the home page)  
 2. Select an AI provider (currently OpenRouter is fully supported)  
@@ -75,7 +75,7 @@ When launching TP-generator for the first time, you'll need to configure the fol
 5. Click "Test Connection" to verify your configuration  
 6. Click "Save" to apply the settings  
   
-### Judge0 Configuration (Optional)  
+### Judge0 Configuration
   
 For code execution capabilities:  
   
@@ -83,9 +83,16 @@ For code execution capabilities:
 2. Click "Test Connection" to verify your configuration  
 3. Click "Save" to apply the settings  
   
-## Usage  
+## Usage
+
+### Setting Using Occation (Permanent or Temp)
+
+1. In the home page's bottom tab
+2. You can see a switcher named "temp use?"
+3. If turn it off, your key information will be saved locally in order to let you use them again after you closing the application
+4. If turn it on, your key information would be delete when you close the application
   
-### Generating Test Points from Problem Descriptions (Q2TP)  
+### Generating Test Points from Problem Descriptions (Q2TP)
   
 1. Navigate to the "Question to TP" page from the sidebar  
 2. Enter the problem description in the Markdown editor  
@@ -94,7 +101,7 @@ For code execution capabilities:
 5. Review and edit the generated test cases  
 6. Click "Save to Local" to save the test points as .in and .out files  
   
-### Generating Test Points from Example Code (E2TP)  
+### Generating Test Points from Example Code (E2TP)
   
 1. Navigate to the "Example to TP" page from the sidebar  
 2. Enter or paste your example code in the code editor  
@@ -103,14 +110,14 @@ For code execution capabilities:
 5. Review and edit the generated test cases  
 6. Click "Save to Local" to save the test points as .in and .out files  
   
-### Running Code (E2TP)  
+### Running Code (E2TP)
   
 1. Enter your code in the code editor  
 2. Provide input data in the Input panel  
 3. Click "Run Code" button  
 4. View the execution result in the Output panel  
   
-## Architecture  
+## Architecture
   
 TP-generator uses a modular [architecture](architecture.png):  
   

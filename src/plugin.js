@@ -1,7 +1,7 @@
 function encode64(text) {
-  return btoa(String.fromCharCode(...new TextEncoder().encode(text)))
+  return btoa(unescape(encodeURIComponent(text)));
 }
 
-function decode64(text) {
-  return new TextDecoder().decode(Uint8Array.from(atob(text), (c) => c.charCodeAt(0)))
+function decode64(base64) {
+  return decodeURIComponent(escape(atob(base64)));
 }

@@ -1,4 +1,4 @@
-# 🧠 TP-Generator v1.2.1 Release Notes
+# 🧠 TP-Generator v1.2.2 Release Notes
 
 **TP-Generator** is a desktop application tailored for **teachers** who need to create high-quality test points for online judge (OJ) platforms. By leveraging AI, it allows you to generate test data through two smart methods—helping automate and simplify your problem-setting workflow.
 
@@ -8,14 +8,14 @@ Choose the file that matches your platform:
 
 | Platform   | File | Download |
 |------------|------|----------|
-| 🪟 Windows | Installer (`.exe`) | [Download TP.Generator_1.2.1_x64-setup.exe](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.2.1/TP.Generator_1.2.1_x64-setup.exe) |
-| 🍎 macOS (Apple Silicon) | Disk Image (`.dmg`) | [Download TP.Generator_1.2.1_aarch64.dmg](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.2.1/TP.Generator_1.2.1_aarch64.dmg) |
-| 🐧 Linux (Debian/Ubuntu) | Package (`.deb`) | [Download TP.Generator_1.2.1_amd64.deb](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.2.1/TP.Generator_1.2.1_amd64.deb) |
-| 🧳 Source Archive | Source Code | [ZIP](https://github.com/OJ-Plugin/TP-generator/archive/refs/tags/v1.2.1.zip) / [TAR.GZ](https://github.com/OJ-Plugin/TP-generator/archive/refs/tags/v1.2.1.tar.gz) |
+| 🪟 Windows | Installer (`.exe`) | [Download TP.Generator_1.2.2_x64-setup.exe](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.2.2/TP.Generator_1.2.2_x64-setup.exe) |
+| 🍎 macOS (Apple Silicon) | Disk Image (`.dmg`) | [Download TP.Generator_1.2.2_aarch64.dmg](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.2.2/TP.Generator_1.2.2_aarch64.dmg) |
+| 🐧 Linux (Debian/Ubuntu) | Package (`.deb`) | [Download TP.Generator_1.2.2_amd64.deb](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.2.2/TP.Generator_1.2.2_amd64.deb) |
+| 🧳 Source Archive | Source Code | [ZIP](https://github.com/OJ-Plugin/TP-generator/archive/refs/tags/v1.2.2.zip) / [TAR.GZ](https://github.com/OJ-Plugin/TP-generator/archive/refs/tags/v1.2.2.tar.gz) |
 
 > 💡 **Recommendation:** Most users should download the installer (`.exe`, `.dmg`, or `.deb`) for your operating system. Developers or advanced users may prefer the source code archives.
 
-## ✨ What's New in v1.2.1
+## ✨ What's New in v1.2.2
 
 - 🐞 **Bug Fixes & Performance Optimizations:** Use AI service to generate input data and source code (in question to test point page but only available in this page), then use judge0 service to get output data with source code and input data in order to get more precise results.
 

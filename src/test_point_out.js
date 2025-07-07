@@ -17,7 +17,8 @@ async function get_output(sourceCode, inputArr) {
             "method": "POST",
             "headers": {
                 "x-rapidapi-key": apiKey,
-                "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com"
+                "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
+                "Content-Type": "application/json"
             },
             "data": JSON.stringify({
                 "language_id": Number(judge0LanguageId),
@@ -26,7 +27,7 @@ async function get_output(sourceCode, inputArr) {
             })
         };
         const res = await $.ajax(settings);
-        results.push(res.stdout || res.stderr || (res.status && res.status.description) || "");
+        results.push(res.stdout || encode64(res.stderr) || encode64((res.status && res.status.description)) || "");
     }
     console.log("Get Output Results:", results);
     return results

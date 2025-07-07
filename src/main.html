@@ -33,7 +33,7 @@
           <div class="card-body title-box">
             <h3 style="text-align: center; margin-top: 4rem">
               欢迎使用TP Gnereator
-              <span style="font-size: small">version 1.2.1</span>
+              <span style="font-size: small">version 1.2.2</span>
             </h3>
           </div>
         </div>
@@ -50,11 +50,11 @@
               </li>
               <li class="nav-item">
                 <button class="nav-link" id="advance-setting" data-bs-toggle="tab" data-bs-target="#advance"
-                  type="button">高级能力</button>
+                  type="button">高级能力<p style="color: red; display: inline;">*</p></button>
               </li>
               <li class="nav-item">
                 <button class="nav-link" id="judge0-setting" data-bs-toggle="tab" data-bs-target="#judge0"
-                  type="button">Judge0设置</button>
+                  type="button">Judge0设置<p style="color: red; display: inline;">*</p></button>
               </li>
               <li class="nav-item">
                 <button class="nav-link" id="basic-about" data-bs-toggle="tab" data-bs-target="#about"
@@ -88,10 +88,7 @@
                     <span>3. API Key创建地址：<a href="https://openrouter.ai/settings/keys"
                         target="_blank">https://openrouter.ai/settings/keys</a><br /></span>
                     <span>4. AI模型（高效）推荐选择：
-                      <p style="color: #2600ff; display: inline">qwen/qwen-2.5-coder-32b-instruct:free</p>
-                    </span>
-                    <span>4. AI模型（精准）推荐选择：
-                      <p style="color: #2600ff; display: inline">deepseek/deepseek-r1:free</p>
+                      <p style="color: #2600ff; display: inline">qwen/qwen-2.5-coder-32b-instruct:free</p><br />
                     </span>
                     <hr />
                     <h5>Judge0设置说明</h5>
@@ -112,20 +109,20 @@
                 <!-- 高级能力 -->
                 <div class="tab-pane fade" id="advance" aria-labelledby="advance-setting">
                   <div class="mb-3">
-                    <label for="config_group" class="form-label">AI模型提供商</label>
+                    <label for="config_group" class="form-label">AI模型提供商<p style="color: red; display: inline;">*</p></label>
                     <select class="form-select" aria-label="下拉选择AI模型提供商" id="model_provider">
-                      <option value="0">请选择模型提供商</option>
-                      <option value="1" disabled>OpenAI（暂不支持）</option>
+                      <!-- <option value="0">请选择模型提供商</option> -->
+                      <!-- <option value="1" disabled>OpenAI（暂不支持）</option> -->
                       <option value="2">OpenRouter</option>
-                      <option value="3" disabled>DeepSeek（暂不支持）</option>
+                      <!-- <option value="3" disabled>DeepSeek（暂不支持）</option> -->
                     </select>
                   </div>
                   <!-- 模型配置 -->
                   <div class="mb-3">
-                    <label for="model_list" class="form-label">模型选择</label>
+                    <label for="model_list" class="form-label">模型选择<p style="color: red; display: inline;">*</p></label>
                     <select class="form-select" aria-label="下拉选择模型" id="model_list"></select>
                     <label for="custom_model" class="form-label" id="custom_model_"
-                      style="display: none">自定义模型名称</label>
+                      style="display: none">自定义模型名称<p style="color: red; display: inline;">*</p></label>
                     <input type="text" class="form-control" id="custom_model" placeholder="请输入自定义模型名称"
                       style="display: none" />
                   </div>
@@ -143,7 +140,7 @@
                   <div class="mb-3" id="model_setting_2" style="display: none">
                     <label class="form-label">OpenRouter模型配置</label>
                     <div class="input-group mb-3">
-                      <span class="input-group-text">APIKey</span>
+                      <span class="input-group-text">APIKey<p style="color: red; display: inline;">*</p></span>
                       <input type="password" class="form-control" id="openrouter_key_" placeholder="APIKey"
                         aria-label="APIKey" aria-describedby="APIKey" />
                     </div>
@@ -170,15 +167,14 @@
                 <div class="tab-pane fade" id="judge0" aria-labelledby="judge0-setting">
                   <div class="mb-3">
                     <label class="form-label">Judge0 代码运行服务
-                      <p style="color: gray; display: inline">（可选）</p>
                     </label>
                     <div class="input-group mb-3">
-                      <span class="input-group-text">APIKey</span>
+                      <span class="input-group-text">APIKey<p style="color: red; display: inline;">*</p></span>
                       <input type="password" class="form-control" id="judge0_api_key" placeholder="APIKey"
                         aria-label="APIKey" aria-describedby="APIKey" />
                     </div>
                     <div class="mb-3">
-                      <label for="judge_language" class="form-label">编译器</label>
+                      <label for="judge_language" class="form-label">编译器<p style="color: red; display: inline;">*</p></label>
                       <select class="form-select" aria-label="下拉选择编译器" id="judge_language">
                         <option value="0">请选择编译器</option>
                       </select>

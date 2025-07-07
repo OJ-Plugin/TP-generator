@@ -36,9 +36,11 @@ document.getElementById("save_btn").addEventListener("click", async function () 
   }
 });
 
+var generate_state = true
+
 document.getElementById("generate_btn").addEventListener("click", async function () {
   $(this).attr("disable", "true");
-  var l = $(this).lyearloading({
+  var l = $("body").lyearloading({
     opacity: 0.2,
     spinnerSize: "nm",
   });
@@ -48,40 +50,46 @@ document.getElementById("generate_btn").addEventListener("click", async function
   const tps_in = await question_get_tp(markdownContent, normalRatio, extreamRatio, l);
   const tps_input_form = JSON.parse(tps_in);
 
-  const exampleSourceCode = await example_source_code(markdownContent, l);
-  const exampleSourceCode_form = JSON.parse(exampleSourceCode).source_code;
+  if (generate_state) {
+    const exampleSourceCode = await example_source_code(markdownContent, l);
 
-  console.log("exampleSourceCode", exampleSourceCode_form);
+    if (generate_state) {
+      const exampleSourceCode_form = JSON.parse(exampleSourceCode).source_code;
 
-  let sourceCode_base64 = encode64(exampleSourceCode_form);
-  let inputArr = tps_input_form.map(item => encode64(item.in));
-  let tps_output_form = await get_output(sourceCode_base64, inputArr);
+      console.log("exampleSourceCode", exampleSourceCode_form);
 
-  let res = []
-  for (let index = 0; index < tps_input_form.length; index++) {
-    res.push({ in: tps_input_form[index].in, out: decode64(tps_output_form[index]) });
+      let sourceCode_base64 = encode64(exampleSourceCode_form);
+      let inputArr = tps_input_form.map(item => encode64(item.in));
+      let tps_output_form = await get_output(sourceCode_base64, inputArr);
+
+      let res = []
+      for (let index = 0; index < tps_input_form.length; index++) {
+        res.push({ in: tps_input_form[index].in, out: decode64(tps_output_form[index]) });
+      }
+
+      console.log("测试点生成结束：", res);
+
+      var in_data = "<span>Input数据</span>",
+        out_data = "<span>Output数据</span>",
+        count = 1;
+      res.forEach((c) => {
+        in_data += `<div class="input-group mb-3">
+                    <span class="input-group-text">${count}</span>
+                    <textarea class="form-control" id="in_val_${count}" rows="1">${c.in}</textarea>
+                  </div>`;
+        out_data += `<div class="input-group mb-3">
+                      <span class="input-group-text">${count}</span>
+                      <textarea class="form-control" id="out_val_${count}" rows="1">${c.out}</textarea>
+                    </div>`;
+        count++;
+      });
+      document.getElementById("in_box").innerHTML = in_data;
+      document.getElementById("out_box").innerHTML = out_data;
+      l.destroy();
+      ai_notify_success();
+    }
   }
-
-  console.log("测试点生成结束：", res);
-
-  var in_data = "<span>Input数据</span>",
-    out_data = "<span>Output数据</span>",
-    count = 1;
-  res.forEach((c) => {
-    in_data += `<div class="input-group mb-3">
-                <span class="input-group-text">${count}</span>
-                <textarea class="form-control" id="in_val_${count}" rows="1">${c.in}</textarea>
-              </div>`;
-    out_data += `<div class="input-group mb-3">
-                  <span class="input-group-text">${count}</span>
-                  <textarea class="form-control" id="out_val_${count}" rows="1">${c.out}</textarea>
-                </div>`;
-    count++;
-  });
-  document.getElementById("in_box").innerHTML = in_data;
-  document.getElementById("out_box").innerHTML = out_data;
-  l.destroy();
-  ai_notify_success();
+  generate_state = true;
 });
 
 async function example_source_code(content, l) {
@@ -132,9 +140,10 @@ async function example_source_code(content, l) {
       break;
   }
   console.log("unformData_SourceCode", unformData);
-  if (unformData == null) {
+  if (unformData == null || unformData.error) {
     ai_notify_error();
     l.destroy();
+    generate_state = false;
     return;
   } else {
     ai_notify_output_data_success();
@@ -203,9 +212,10 @@ async function question_get_tp(markdownPrompt, normalRatio = 5, extreamRatio = 5
       break;
   }
   console.log("unformData", unformData);
-  if (unformData == null) {
+  if (unformData == null || unformData.error) {
     ai_notify_error();
     l.destroy();
+    generate_state = false;
     return;
   } else {
     ai_notify_input_data_success();
