@@ -126,15 +126,27 @@ jobs:
     needs: [create-release, build-tauri]
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Read release note
+        id: read_release_note
+        run: |
+          echo "RELEASE_NOTE<<EOF" >> $GITHUB_ENV
+          cat releaseNote.txt >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
       - name: Publish release
         uses: actions/github-script@v6
         env:
           release_id: ${{ needs.create-release.outputs.release_id }}
+          release_note: ${{ env.RELEASE_NOTE }}
         with:
           script: |
             await github.rest.repos.updateRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: process.env.release_id,
-              draft: false
+              draft: false,
+              body: process.env.release_note
             });
