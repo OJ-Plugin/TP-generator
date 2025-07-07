@@ -143,10 +143,13 @@ jobs:
           release_note: ${{ env.RELEASE_NOTE }}
         with:
           script: |
+            const tag = `${context.ref}`.replace('refs/tags/', '');
+            const version = tag.startsWith('v') ? tag.substring(1) : tag;
             await github.rest.repos.updateRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: process.env.release_id,
               draft: false,
+              name: `TP Generator Version ${version}`,
               body: process.env.release_note
             });
