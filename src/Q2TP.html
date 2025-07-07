@@ -26,8 +26,10 @@
               <div class="card-title">题目</div>
             </header>
             <div class="card-body">
-              <label for="ranger" class="form-label">测试点数量：</label>
-              <input type="number" min="1" max="20" value="5" style="margin-bottom: 0.5rem" class="form-control" id="ranger" />
+              <label for="normalRatio" class="form-label">常规数据数量：</label>
+              <input type="number" min="1" max="20" value="5" style="margin-bottom: 0.5rem" class="form-control" id="normalRatio" />
+              <label for="extreamRatio" class="form-label">极端数据数量：</label>
+              <input type="number" min="1" max="20" value="5" style="margin-bottom: 0.5rem" class="form-control" id="extreamRatio" />
               <button class="btn btn-primary" style="display: block; width: 100%; margin-bottom: 0.5rem" id="generate_btn">点击生成测试点</button>
               <textarea id="markdown-editor"></textarea>
             </div>
@@ -64,8 +66,11 @@
     <!-- 通知插件 -->
     <script type="text/javascript" src="./statics/js/bootstrap-notify.min.js"></script>
 
+    <script type="text/javascript" src="./plugin.js"></script>
+
     <script type="text/javascript" src="./ai_notify.js"></script>
     <script type="text/javascript" src="./ai_generation.js"></script>
+    <script type="text/javascript" src="./test_point_out.js"></script>
     <script type="text/javascript" src="./q2tp.js"></script>
 
     <!-- EasyMDE Markdown Editor JS -->

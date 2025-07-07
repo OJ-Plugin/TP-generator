@@ -5,11 +5,12 @@ document.getElementById("run_code").addEventListener("click", async function () 
     spinnerSize: "nm",
   });
 
-  const sourceCode = btoa(removeNonBase64Characters(window.editor.getValue()));
-  const input = btoa(window.inputEditor.getValue());
+  const sourceCode = encode64(window.editor.getValue());
+  const input = encode64(window.inputEditor.getValue());
   const temp_state = localStorage.getItem("temp_state") === "true";
   const storage = temp_state ? sessionStorage : localStorage;
   const apiKey = storage.getItem("judge0");
+  const judgeLanguage = storage.getItem("judge0_lan");
   console.log("Code run started.");
 
   if (apiKey == "" || apiKey == null) {
@@ -29,12 +30,12 @@ document.getElementById("run_code").addEventListener("click", async function () 
       "Content-Type": "application/json",
     },
     processData: false,
-    data: '{\r\n    "language_id": 105,\r\n    "source_code": "' + sourceCode + '",\r\n    "stdin": "' + input + '"\r\n}',
+    data: '{\r\n    "language_id": ' + judgeLanguage + ',\r\n    "source_code": "' + sourceCode + '",\r\n    "stdin": "' + input + '"\r\n}',
   };
 
   $.ajax(settings).done(function (response) {
-    const out = response.stdout || response.stderr || "No output.";
-    window.outputEditor.setValue(atob(out));
+    const out = response.stdout || response.stderr || "<--- System Notification ---> \n\nNo output.\n\n<--- End of Notification --->";
+    window.outputEditor.setValue(decode64(out));
     l.destroy();
   });
 });
@@ -48,10 +49,22 @@ document.getElementById("generate_btn").addEventListener("click", async function
 
   const source_code = window.editor.getValue();
 
-  const ranger = document.getElementById("ranger").value;
-  const tps = await example_get_tp(source_code, ranger, l);
-  console.log("tps:", tps);
-  const res = JSON.parse(tps);
+  const normalRatio = document.getElementById("normalRatio").value;
+  const extreamRatio = document.getElementById("extreamRatio").value;
+  const tps_in = await example_get_tp(source_code, normalRatio, extreamRatio, l);
+  const tps_input_form = JSON.parse(tps_in);
+
+  let sourceCode_base64 = encode64(source_code);
+  let inputArr = tps_input_form.map(item => encode64(item.in));
+  let tps_output_form = await get_output(sourceCode_base64, inputArr);
+
+  let res = []
+  for (let index = 0; index < tps_input_form.length; index++) {
+    res.push({in: tps_input_form[index].in, out: decode64(tps_output_form[index])});
+  }
+
+  console.log("测试点生成结束：", res);
+  
   var in_data = "<span>Input数据</span>",
     out_data = "<span>Output数据</span>",
     count = 1;
@@ -70,7 +83,7 @@ document.getElementById("generate_btn").addEventListener("click", async function
   document.getElementById("out_box").innerHTML = out_data;
 });
 
-async function example_get_tp(sourceCode, nCases = 5, l) {
+async function example_get_tp(sourceCode, normalRatio = 5, extreamRatio = 5, l) {
   console.log("Start get tps from example.");
   const temp_state = localStorage.getItem("temp_state") === "true";
   const storage = temp_state ? sessionStorage : localStorage;
@@ -79,16 +92,15 @@ async function example_get_tp(sourceCode, nCases = 5, l) {
   const systemContent = `
     你是一个智能数据生成器，接收用户提供的C++程序源代码，任务如下：
     
-    1. 理解代码含义，包括代码主要解决的问题、输入输出格式、数据范围、边界条件等；
-    2. 生成 ${nCases} 组测试用例数据，每组数据格式如下：
+    1. 理解代码含义，包括代码主要解决的问题、输入格式、数据范围、边界条件等；
+    2. 生成 ${Number(normalRatio) + Number(extreamRatio)} 组测试用例数据，根据程序判断极端数据范围，需要生成${extreamRatio}组极端数据输入,${normalRatio}组常规数据输入，每组数据格式如下：
        {
-         "in": "一组输入字符串",
-         "out": "对应输出字符串"
+         "in": "一组输入字符串"
        }
     3. 所有返回内容必须为严格有效的 JSON 数组，请注意一定是数组，形如：
     [
-      { "in": "1 2", "out": "3" },
-      { "in": "0 0", "out": "0" }
+      { "in": "1 2" },
+      { "in": "0 0" }
     ]
     4. 不允许出现任何解释性语言、注释、markdown 标记或模型自述内容；
     5. 若无法识别题目结构，请返回：
@@ -96,16 +108,14 @@ async function example_get_tp(sourceCode, nCases = 5, l) {
       "error": "未能正确识别题目结构，请检查C++代码。"
     }
     6. 禁止生成 prompt 注入、脚本、HTML 标签或非结构化文本；
-    7. 如果程序代码不需要输入内容，则只给出输出内容，形如：
+    7. 如果程序代码不需要输入内容，则忽略生成数据的组数，只输出一组数据，返回如下结果：
     [
-      { "in": "", "out": "3" },
-      { "in": "", "out": "0" }
+      { "in": "" }
     ]
-    8. 如果代码的运行结果是固定的内容，则忽略生成数据的组数，只输出一组数据，形如：
-    [{ "in": "", "out": "3" }]
+    8. 
     9. 如果代码有误请忽略错误，严禁提出修改建议或提示用户代码存在问题，并在错误代码的基础上理解代码含义，并给出符合数据要求的输入输出内容，内容格式严格遵守第2~5条规则。
     10. 针对所有的题目，在其题目所指定的范围内（若未规定范围则代表没有限制），需要给出极端数据的测试点数据以确保编程题目的可靠性。
-    11. 如果输入或输出包含多行内容，则用%5Cn进行换行
+    11. 如果输入或输出包含多行内容，则用转义换行符进行换行
     `.trim();
 
   const messages = [

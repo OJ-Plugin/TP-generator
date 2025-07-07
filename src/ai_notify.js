@@ -61,3 +61,68 @@ function ai_notify_success() {
     }
   );
 }
+
+
+function ai_notify_input_data_success() {
+  $.notify(
+    {
+      icon: "mdi mdi-check-circle-outline",
+      title: "请求成功",
+      message: "测试点输入数据获取成功！",
+    },
+    {
+      type: "success",
+      allow_dismiss: true,
+      newest_on_top: false,
+      placement: {
+        from: "top",
+        align: "right",
+      },
+      offset: {
+        x: 20,
+        y: 20,
+      },
+      spacing: 10,
+      z_index: 1031,
+      delay: 5000,
+      animate: {
+        enter: "animate__animated animate__fadeInDown",
+        exit: "animate__animated animate__fadeOutUp",
+      },
+      onClosed: null,
+      mouse_over: null,
+    }
+  );
+}
+
+function ai_notify_output_data_success() {
+  $.notify(
+    {
+      icon: "mdi mdi-check-circle-outline",
+      title: "请求成功",
+      message: "测试点输出数据获取成功！",
+    },
+    {
+      type: "success",
+      allow_dismiss: true,
+      newest_on_top: false,
+      placement: {
+        from: "top",
+        align: "right",
+      },
+      offset: {
+        x: 20,
+        y: 20,
+      },
+      spacing: 10,
+      z_index: 1031,
+      delay: 5000,
+      animate: {
+        enter: "animate__animated animate__fadeInDown",
+        exit: "animate__animated animate__fadeOutUp",
+      },
+      onClosed: null,
+      mouse_over: null,
+    }
+  );
+}

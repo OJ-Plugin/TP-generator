@@ -36,7 +36,6 @@ As a cross-platform desktop application, TP generator is built using the Tauri f
 - **AI Integration**:  
   - OpenRouter support with access to multiple AI models  
   - Recommended model (More efficient): `qwen/qwen-2.5-coder-32b-instruct:free` for optimal test point generation
-  - Recommended model (More precise): `deepseek/deepseek-r1:free` for precise test point generation
   - Planned support for OpenAI and DeepSeek  
   
 - **Code Execution**: Verify your solution with Judge0 integration  
@@ -57,9 +56,9 @@ TP-generator is available for Windows, macOS, and Linux operating systems. Downl
   
 | Operating System | Download Link                              |  
 |------------------|--------------------------------------------|  
-| Windows          | [Download Windows v1.1.1 (*.exe)](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.1.1/TP.Generator_1.1.1_x64-setup.exe) |  
-| macOS            | [Download macOS v1.1.1 (*.dmg)](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.1.1/TP.Generator_1.1.1_aarch64.dmg) |  
-| Linux            | [Download Linux v1.1.1 (*.deb)](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.1.1/TP.Generator_1.1.1_amd64.deb) |  
+| Windows          | [Download Windows v1.2.0 (*.exe)](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.2.0/TP.Generator_1.2.0_x64-setup.exe) |  
+| macOS            | [Download macOS v1.2.0 (*.dmg)](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.2.0/TP.Generator_1.2.0_aarch64.dmg) |  
+| Linux            | [Download Linux v1.2.0 (*.deb)](https://github.com/OJ-Plugin/TP-generator/releases/download/v1.2.0/TP.Generator_1.2.0_amd64.deb) |  
   
 For the latest releases and additional formats, visit the [GitHub releases page](https://github.com/OJ-Plugin/TP-generator/releases).  
   
@@ -80,7 +79,7 @@ When launching TP-generator for the first time, you'll need to configure the fol
   
 For code execution capabilities:  
   
-1. Enter your Judge0 API key from RapidAPI  
+1. Enter your [Judge0 CE](https://rapidapi.com/judge0-official/api/judge0-ce) API key from [RapidAPI](https://rapidapi.com/developer)  
 2. Click "Test Connection" to verify your configuration  
 3. Click "Save" to apply the settings  
   

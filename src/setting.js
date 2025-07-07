@@ -1,4 +1,7 @@
-window.onload = function () {
+// 页面加载时拉取openrouter模型
+window.addEventListener("DOMContentLoaded", function () {
+  fetchOpenRouterModels();
+  fetchJudge0LangusageList();
   var temp_state = window.localStorage.getItem("temp_state");
   if (temp_state == "true") {
     document.getElementById("temp_state").checked = true;
@@ -6,7 +9,7 @@ window.onload = function () {
     document.getElementById("temp_state").checked = false;
   }
   load_temp();
-};
+});
 
 function load_temp() {
   const temp_state = window.localStorage.getItem("temp_state") === "true";
@@ -15,8 +18,7 @@ function load_temp() {
   const apiKey = temp_state ? window.sessionStorage.getItem("apiKey") : window.localStorage.getItem("apiKey");
   const customModelName = temp_state ? window.sessionStorage.getItem("customModelName") : window.localStorage.getItem("customModelName");
   const judge0_key = temp_state ? window.sessionStorage.getItem("judge0") : window.localStorage.getItem("judge0");
-
-  document.getElementById("judge0_api_key").value = judge0_key;
+  const judge0_lan = temp_state ? window.sessionStorage.getItem("judge0_lan") : window.localStorage.getItem("judge0_lan");
 
   if (!provider_ || !model || !apiKey) return;
 
@@ -55,6 +57,11 @@ function load_temp() {
     // 填充API key
     document.getElementById(`${provider_}_key_`).value = apiKey;
   }
+
+  // 设置Judge0语言
+  document.getElementById("judge0_api_key").value = judge0_key;
+  const judge0LangSelect = document.getElementById("judge_language");
+  judge0LangSelect.value = judge0_lan;
 }
 
 function save_temp() {
@@ -71,6 +78,7 @@ function save_temp() {
       const apiKey = window.localStorage.getItem("apiKey");
       const customModelName = window.localStorage.getItem("customModelName");
       const judge0 = window.localStorage.getItem("judge0");
+      const judge0_lan = window.localStorage.getItem("judge0_lan");
       if (provider_ && model && apiKey) {
         // temp模式下使用sessionStorage，浏览器关闭时自动清除
         window.sessionStorage.setItem("provider", provider_);
@@ -83,8 +91,11 @@ function save_temp() {
         window.localStorage.removeItem("apiKey");
         window.localStorage.removeItem("customModelName");
       }
+      // Judge0配置转存
       window.sessionStorage.setItem("judge0", judge0);
       window.localStorage.removeItem("judge0");
+      window.sessionStorage.setItem("judge0_lan", judge0_lan);
+      window.localStorage.removeItem("judge0_lan");
     } else {
       // 切换到非temp模式，从cookie转存到localStorage
       const provider_ = window.sessionStorage.getItem("provider");
@@ -92,6 +103,7 @@ function save_temp() {
       const apiKey = window.sessionStorage.getItem("apiKey");
       const customModelName = window.sessionStorage.getItem("customModelName");
       const judge0 = window.sessionStorage.getItem("judge0");
+      const judge0_lan = window.sessionStorage.getItem("judge0_lan");
       if (provider_ && model && apiKey) {
         window.localStorage.setItem("provider", provider_);
         window.localStorage.setItem("model", model);
@@ -103,8 +115,11 @@ function save_temp() {
         window.sessionStorage.removeItem("apiKey");
         window.sessionStorage.removeItem("customModelName");
       }
+      // Judge0配置转存
       window.localStorage.setItem("judge0", judge0);
       window.sessionStorage.removeItem("judge0");
+      window.localStorage.setItem("judge0_lan", judge0_lan);
+      window.sessionStorage.removeItem("judge0_lan");
     }
   }
   $.notify(
@@ -143,65 +158,72 @@ const provider = ["", "openai", "openrouter", "deepseek"];
 
 const model_list = {
   openai: ["gpt-4o", "gpt-4o-mini", "gpt-4.5-preview", "gpt-4o-mini-2024-07-18", "gpt-4o-2024-11-20", "gpt-4o-2024-08-06", "gpt-4o-2024-05-13", "gpt-4.5-preview-2025-02-27", "gpt-3.5-turbo-16k", "gpt-3.5-turbo-1106", "gpt-3.5-turbo-0125"],
-  openrouter: [
-    "google/gemini-2.0-flash-thinking-exp:free",
-    "google/gemini-2.0-flash-thinking-exp-1219:free",
-    "moonshotai/moonlight-16b-a3b-instruct:free",
-    "nvidia/llama-3.1-nemotron-70b-instruct:free",
-    "nousresearch/deephermes-3-llama-3-8b-preview:free",
-    "google/gemini-2.0-flash-exp:free",
-    "microsoft/phi-3-medium-128k-instruct:free",
-    "google/learnlm-1.5-pro-experimental:free",
-    "google/gemini-2.5-pro-exp-03-25:free",
-    "google/gemini-2.0-pro-exp-02-05:free",
-    "meta-llama/llama-3.2-11b-vision-instruct:free",
-    "microsoft/phi-3-mini-128k-instruct:free",
-    "mistralai/mistral-small-3.1-24b-instruct:free",
-    "deepseek/deepseek-r1-distill-llama-70b:free",
-    "qwen/qwen2.5-vl-32b-instruct:free",
-    "qwen/qwen2.5-vl-72b-instruct:free",
-    "deepseek/deepseek-r1-distill-qwen-32b:free",
-    "deepseek/deepseek-r1-distill-qwen-14b:free",
-    "qwen/qwen2.5-vl-3b-instruct:free",
-    "meta-llama/llama-3.3-70b-instruct:free",
-    "qwen/qwen-2.5-vl-7b-instruct:free",
-    "mistralai/mistral-7b-instruct:free",
-    "meta-llama/llama-3.2-3b-instruct:free",
-    "meta-llama/llama-3.2-1b-instruct:free",
-    "meta-llama/llama-3.1-8b-instruct:free",
-    "deepseek/deepseek-v3-base:free",
-    "deepseek/deepseek-chat-v3-0324:free",
-    "deepseek/deepseek-r1-zero:free",
-    "qwen/qwen-2.5-coder-32b-instruct:free",
-    "cognitivecomputations/dolphin3.0-r1-mistral-24b:free",
-    "mistralai/mistral-small-24b-instruct-2501:free",
-    "bytedance-research/ui-tars-72b:free",
-    "huggingfaceh4/zephyr-7b-beta:free",
-    "cognitivecomputations/dolphin3.0-mistral-24b:free",
-    "deepseek/deepseek-chat:free",
-    "qwen/qwq-32b-preview:free",
-    "mistralai/mistral-nemo:free",
-    "sophosympatheia/rogue-rose-103b-v0.2:free",
-    "qwen/qwen-2.5-72b-instruct:free",
-    "allenai/molmo-7b-d:free",
-    "google/gemma-3-12b-it:free",
-    "google/gemma-3-27b-it:free",
-    "qwen/qwen-2.5-7b-instruct:free",
-    "google/gemma-3-1b-it:free",
-    "google/gemma-3-4b-it:free",
-    "google/gemma-2-9b-it:free",
-    "open-r1/olympiccoder-32b:free",
-    "open-r1/olympiccoder-7b:free",
-    "openchat/openchat-7b:free",
-    "rekaai/reka-flash-3:free",
-    "qwen/qwq-32b:free",
-    "deepseek/deepseek-r1:free",
-    "featherless/qwerky-72b:free",
-    "undi95/toppy-m-7b:free",
-    "自定义模型",
-  ],
+  openrouter: [], // 初始为空，页面加载时动态获取
   deepseek: ["deepseek-chat", "deepseek-reasoner"],
 };
+
+// 动态获取openrouter免费模型列表
+function fetchOpenRouterModels() {
+  const settings = {
+    "async": false,
+    "crossDomain": true,
+    "url": "https://openrouter.ai/api/v1/models",
+    "method": "GET",
+  };
+
+  $.ajax(settings).done(function (response) {
+    // response 已经是对象
+    let freeModels = (response.data || [])
+      .filter(m => typeof m.id === "string" && m.id.includes(":free"))
+      .map(m => m.id);
+    // 按字母升序排序
+    freeModels.sort((a, b) => a.localeCompare(b));
+    // 添加自定义模型
+    freeModels.push("自定义模型");
+    model_list.openrouter = freeModels;
+
+    // 如果当前provider是openrouter，刷新下拉框
+    const providerSelect = document.getElementById("model_provider");
+    if (providerSelect && provider[providerSelect.value] === "openrouter") {
+      const modelList_show = document.getElementById("model_list");
+      modelList_show.innerHTML = "";
+      freeModels.forEach((model) => {
+        const option = document.createElement("option");
+        option.value = model;
+        option.text = model;
+        modelList_show.appendChild(option);
+      });
+    }
+  }).fail(function (err) {
+    // 失败时只显示自定义模型
+    model_list.openrouter = ["自定义模型"];
+  });
+}
+
+// 动态获取Judge0语言列表
+function fetchJudge0LangusageList() {
+  const settings = {
+    "async": false,
+    "crossDomain": true,
+    "url": "https://ce.judge0.com/languages/",
+    "method": "GET",
+  };
+
+  $.ajax(settings).done(function (response) {
+    const langSelect = document.getElementById("judge_language");
+    langSelect.innerHTML = ""; // 清空现有选项
+    const lanList = (response || []).filter(lang => lang.name.includes("C++"));
+    lanList.forEach(lang => {
+      const option = document.createElement("option");
+      option.value = lang.id;
+      option.text = lang.name;
+      langSelect.appendChild(option);
+    });
+  }).fail(function (err) {
+    console.error("获取Judge0语言列表失败:", err);
+  });
+}
+
 
 document.getElementById("model_provider").addEventListener("change", function () {
   const provider_ = provider[this.value];
@@ -388,60 +410,67 @@ document.getElementById("save_setting_judge0").addEventListener("click", async f
   });
   // 首先进行测试连接验证，验证失败的不能进行保存，验证成功才可以继续进行保存
   const apiKey = document.getElementById("judge0_api_key").value;
+  const judgeLanguage = document.getElementById("judge_language").value;
   if (apiKey === "") {
     var temp_state = window.localStorage.getItem("temp_state");
     if (temp_state === "true") {
       window.sessionStorage.setItem("judge0", "");
+      window.sessionStorage.setItem("judge0_lan", "");
     } else {
-      window.localStorage.setItem("judge0", apiKey);
+      window.localStorage.setItem("judge0", "");
+      window.localStorage.setItem("judge0_lan", "");
     }
     notify_judge0_clear();
   } else {
     let isConnected = false;
-    isConnected = await test_judge0_conn(apiKey);
+    isConnected = await testJudge0Connection(apiKey, judgeLanguage);
     if (!isConnected) {
       notify_invalid_setting_judge0();
       l.destroy();
       return;
-    }
-    // 使用localstorage持久化储存用户模型配置【需注意temp模型下使用cookie】
-    const key = document.getElementById("judge0_api_key").value;
-    const temp_state = window.localStorage.getItem("temp_state");
-    if (temp_state === "true") {
-      // 临时使用，使用sessionStorage
-      window.sessionStorage.setItem("judge0", key);
     } else {
-      // 持久化储存，使用localstorage
-      window.localStorage.setItem("judge0", key);
-    }
-    $.notify(
-      {
-        icon: "mdi mdi-check-circle-outline",
-        title: "配置保存成功",
-        message: "已保存Judge0配置！",
-      },
-      {
-        type: "success",
-        allow_dismiss: true,
-        newest_on_top: true,
-        placement: {
-          from: "top",
-          align: "right",
-        },
-        offset: {
-          x: 20,
-          y: 20,
-        },
-        spacing: 10,
-        z_index: 1031,
-        delay: 5000,
-        animate: {
-          enter: "animate__animated animate__fadeInDown",
-          exit: "animate__animated animate__fadeOutUp",
-        },
-        onClosed: l.destroy(),
+      // 使用localstorage持久化储存用户模型配置【需注意temp模型下使用cookie】
+      const key = document.getElementById("judge0_api_key").value;
+      const judgeLanguage = document.getElementById("judge_language").value;
+      const temp_state = window.localStorage.getItem("temp_state");
+      if (temp_state === "true") {
+        // 临时使用，使用sessionStorage
+        window.sessionStorage.setItem("judge0", key);
+        window.sessionStorage.setItem("judge0_lan", judgeLanguage);
+      } else {
+        // 持久化储存，使用localstorage
+        window.localStorage.setItem("judge0", key);
+        window.localStorage.setItem("judge0_lan", judgeLanguage);
       }
-    );
+      $.notify(
+        {
+          icon: "mdi mdi-check-circle-outline",
+          title: "配置保存成功",
+          message: "已保存Judge0配置！",
+        },
+        {
+          type: "success",
+          allow_dismiss: true,
+          newest_on_top: true,
+          placement: {
+            from: "top",
+            align: "right",
+          },
+          offset: {
+            x: 20,
+            y: 20,
+          },
+          spacing: 10,
+          z_index: 1031,
+          delay: 5000,
+          animate: {
+            enter: "animate__animated animate__fadeInDown",
+            exit: "animate__animated animate__fadeOutUp",
+          },
+          onClosed: l.destroy(),
+        }
+      );
+    }
   }
 });
 
@@ -452,11 +481,12 @@ document.getElementById("judge0_test_conn").addEventListener("click", async func
     spinnerSize: "nm",
   });
   const apiKey = document.getElementById("judge0_api_key").value;
+  const judgeLanguage = document.getElementById("judge_language").value;
   if (apiKey === "") {
     notify_invalid_setting_judge0();
   } else {
     try {
-      let isConnected = await test_judge0_conn(apiKey);
+      const isConnected = await testJudge0Connection(apiKey, judgeLanguage);
       if (isConnected) {
         notify_success_setting_judge0();
       } else {
@@ -470,12 +500,6 @@ document.getElementById("judge0_test_conn").addEventListener("click", async func
     }
   }
 });
-
-async function test_judge0_conn(apiKey) {
-  let isConnected = false;
-  isConnected = await testJudge0Connection(apiKey);
-  return isConnected;
-}
 
 function notify_success_setting_judge0() {
   $.notify(
