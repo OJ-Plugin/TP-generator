@@ -1,5 +1,3 @@
-# 🧠 TP-Generator v1.3.1 Release Notes
-
 **TP-Generator** is a desktop application tailored for **teachers** who need to create high-quality test points for online judge (OJ) platforms. By leveraging AI, it allows you to generate test data through two smart methods—helping automate and simplify your problem-setting workflow.
 
 ## 📥 Downloads
