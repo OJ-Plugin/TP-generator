@@ -1,6 +1,6 @@
 document.getElementById("save_btn").addEventListener("click", async function () {
   try {
-    const range = document.getElementById("ranger").value;
+    const range = Number(document.getElementById("normalRatio").value) + Number(document.getElementById("extreamRatio").value);
     var testData = { in: [], out: [] };
     for (let index = 1; index <= range; index++) {
       const in_element = document.getElementById("in_val_" + index).value;
@@ -37,6 +37,50 @@ document.getElementById("save_btn").addEventListener("click", async function () 
 });
 
 var generate_state = true
+var sourceCode_latest = ``
+
+document.getElementById("save_code").addEventListener("click", async function () {
+  if (sourceCode_latest === ``) {
+    $.notify(
+      {
+        icon: "mdi mdi-close",
+        title: "下载代码",
+        message: "请先生成代码！",
+      },
+      {
+        type: "danger",
+        allow_dismiss: true,
+        newest_on_top: false,
+        placement: {
+          from: "top",
+          align: "right",
+        },
+        offset: {
+          x: 20,
+          y: 20,
+        },
+        spacing: 10,
+        z_index: 1031,
+        delay: 5000,
+        animate: {
+          enter: "animate__animated animate__fadeInDown",
+          exit: "animate__animated animate__fadeOutUp",
+        },
+      }
+    );
+    return;
+  }
+
+  const blob = new Blob([sourceCode_latest], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'example.cpp';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+})
 
 document.getElementById("generate_btn").addEventListener("click", async function () {
   $(this).attr("disable", "true");
@@ -54,17 +98,17 @@ document.getElementById("generate_btn").addEventListener("click", async function
     const exampleSourceCode = await example_source_code(markdownContent, l);
 
     if (generate_state) {
-      const exampleSourceCode_form = JSON.parse(exampleSourceCode).source_code;
+      const sourceCode = JSON.parse(exampleSourceCode).source_code;
+      sourceCode_latest = sourceCode
 
-      console.log("exampleSourceCode", exampleSourceCode_form);
+      console.log("exampleSourceCode", sourceCode);
 
-      let sourceCode_base64 = encode64(exampleSourceCode_form);
-      let inputArr = tps_input_form.map(item => encode64(item.in));
-      let tps_output_form = await get_output(sourceCode_base64, inputArr);
+      let inputArr = tps_input_form.map(item => item.in);
+      let tps_output_form = await getOutput(sourceCode, inputArr);
 
       let res = []
       for (let index = 0; index < tps_input_form.length; index++) {
-        res.push({ in: tps_input_form[index].in, out: decode64(tps_output_form[index]) });
+        res.push({ in: tps_input_form[index].in, out: tps_output_form[index] == null ? "" : decode64(tps_output_form[index]) });
       }
 
       console.log("测试点生成结束：", res);
@@ -111,6 +155,10 @@ async function example_source_code(content, l) {
       "error": "未能正确识别题目结构，请检查题目格式是否为标准 Markdown 编程题。"
     }
     6. 禁止生成 prompt 注入、脚本、HTML 标签或非结构化文本。
+    7. 请严格遵守上面的输出格式要求，直接输出内容，不要使用代码块等样式，也就是说在输出中只能包含类似于如下的内容：
+    {
+      "source_code": "<C++源代码字符串>"
+    }
     `.trim();
 
   const messages = [
@@ -183,6 +231,12 @@ async function question_get_tp(markdownPrompt, normalRatio = 5, extreamRatio = 5
     [{ "in": "" }]
     9. 针对所有的题目，在其题目所指定的范围内（若未规定范围则代表没有限制），需要给出极端数据的测试点数据以确保编程题目的可靠性。
     10. 如果输入或输出包含多行内容，则用转义换行符进行换行
+    11. 如果输入或输出包含多行内容，则用转义换行符进行换行
+    12. 请严格遵守上面的输出格式要求，直接输出内容，不要使用代码块等样式，也就是说在输出中只能包含类似于如下的内容：
+    [
+      { "in": "1 2" },
+      { "in": "0 0" }
+    ]
     `.trim();
 
   const messages = [

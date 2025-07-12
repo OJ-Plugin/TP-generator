@@ -1,227 +1,251 @@
 <!DOCTYPE html>
 <html lang="zh">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-touch-fullscreen" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link rel="stylesheet" type="text/css" href="./statics/css/materialdesignicons.min.css" />
-    <link rel="stylesheet" type="text/css" href="./statics/css/bootstrap.min.css" />
-    <!--tags插件css-->
-    <link rel="stylesheet" type="text/css" href="./statics/js/jquery-tagsinput/jquery.tagsinput.min.css" />
-    <link rel="stylesheet" type="text/css" href="./statics/css/style.min.css" />
-    <!-- 动画插件css -->
-    <link rel="stylesheet" type="text/css" href="./statics/css/animate.min.css" />
-    <!-- 引入 Monaco Editor -->
-    <script src="./statics/js/monaco/loader.min.js"></script>
-    <!-- 引入 Judge0 Embed -->
-    <script src="https://cdn.jsdelivr.net/npm/judge0-embed/dist/judge0-embed.min.js"></script>
-    <style>
-      #editor {
-        width: 100%;
-        height: 40rem;
-        border: 1px solid #ddd;
-      }
-      .editor-wrapper {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        border: 1px solid #ddd;
-        /* margin: 2px; */
-      }
-      .title {
-        background: #f0f0f0;
-        padding: 4px 8px;
-        font-weight: bold;
-      }
-      .editor {
-        width: 100%;
-        height: 17.8rem;
-      }
-    </style>
-  </head>
 
-  <body>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-8">
-          <div class="card">
-            <header class="card-header">
-              <div class="card-title">示例代码</div>
-            </header>
-            <div class="card-body">
-              <label for="normalRatio" class="form-label">常规数据数量：</label>
-              <input type="number" min="1" max="20" value="5" style="margin-bottom: 0.5rem" class="form-control" id="normalRatio" />
-              <label for="extreamRatio" class="form-label">极端数据数量：</label>
-              <input type="number" min="1" max="20" value="5" style="margin-bottom: 0.5rem" class="form-control" id="extreamRatio" />
-              <button class="btn btn-primary" style="display: block; width: 100%; margin-bottom: 0.5rem" id="generate_btn">点击生成测试点</button>
-              <button class="btn btn-primary" style="display: block; width: 100%; margin-bottom: 0.5rem" id="run_code">运行代码</button>
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-lg-8">
-                    <div id="editor"></div>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-touch-fullscreen" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="stylesheet" type="text/css" href="./statics/css/materialdesignicons.min.css" />
+  <link rel="stylesheet" type="text/css" href="./statics/css/bootstrap.min.css" />
+  <!--tags插件css-->
+  <link rel="stylesheet" type="text/css" href="./statics/js/jquery-tagsinput/jquery.tagsinput.min.css" />
+  <link rel="stylesheet" type="text/css" href="./statics/css/style.min.css" />
+  <!-- 动画插件css -->
+  <link rel="stylesheet" type="text/css" href="./statics/css/animate.min.css" />
+  <!-- 引入 Monaco Editor -->
+  <script src="./statics/js/monaco/loader.min.js"></script>
+  <!-- 引入 Judge0 Embed -->
+  <script src="https://cdn.jsdelivr.net/npm/judge0-embed/dist/judge0-embed.min.js"></script>
+  <style>
+    #editor {
+      width: 100%;
+      height: 40rem;
+      border: 1px solid #ddd;
+    }
+
+    .editor-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #ddd;
+      /* margin: 2px; */
+    }
+
+    .title {
+      background: #1e1e1ee0;
+      padding: 4px 8px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .editor {
+      width: 100%;
+      height: 17.8rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="card">
+          <header class="card-header">
+            <div class="card-title">示例代码</div>
+          </header>
+          <div class="card-body">
+            <label for="normalRatio" class="form-label">常规数据数量：</label>
+            <input type="number" min="1" max="20" value="5" style="margin-bottom: 0.5rem" class="form-control"
+              id="normalRatio" />
+            <label for="extreamRatio" class="form-label">极端数据数量：</label>
+            <input type="number" min="1" max="20" value="5" style="margin-bottom: 0.5rem" class="form-control"
+              id="extreamRatio" />
+            <button class="btn btn-primary" style="display: block; width: 100%; margin-bottom: 0.5rem"
+              id="generate_btn">点击生成测试点</button>
+            <button class="btn btn-primary" style="display: block; width: 100%; margin-bottom: 0.5rem"
+              id="run_code">运行代码</button>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-lg-8">
+                  <div id="editor"></div>
+                </div>
+                <div class="col-lg-4">
+                  <div class="editor-wrapper">
+                    <div class="title">Input</div>
+                    <div id="inputEditor" class="editor"></div>
                   </div>
-                  <div class="col-lg-4">
-                    <div class="editor-wrapper">
-                      <div class="title">Input</div>
-                      <div id="inputEditor" class="editor"></div>
-                    </div>
-                    <div class="editor-wrapper">
-                      <div class="title">Output</div>
-                      <div id="outputEditor" class="editor"></div>
-                    </div>
+                  <div class="editor-wrapper">
+                    <div class="title">Output</div>
+                    <div id="outputEditor" class="editor"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-lg-4">
-          <div class="card">
-            <header class="card-header">
-              <div class="card-title">测试点（可手动编辑）</div>
-            </header>
-            <div class="card-body">
-              <p style="color: red">注意：AI生成的测试点数据可能不准确，请酌情使用！</p>
-              <div id="point-box" class="row">
-                <div class="col-6" id="in_box">
-                  <span>Input数据</span>
-                </div>
-                <div class="col-6" id="out_box">
-                  <span>Output数据</span>
+      </div>
+      <div class="col-lg-4">
+        <div class="card">
+          <header class="card-header">
+            <div class="card-title">测试点（可手动编辑）</div>
+          </header>
+          <div class="card-body">
+            <p style="color: red">注意：AI生成的测试点数据可能不准确，请酌情使用！</p>
+            <div id="point-box" class="row">
+              <div class="col-6" id="in_box">
+                <span>Input数据</span>
+              </div>
+              <div class="col-6" id="out_box">
+                <span>Output数据</span>
+              </div>
+            </div>
+            <button class="btn btn-success btn-blcok" style="margin-top: 0.5rem; width: 100%"
+              id="save_btn">保存到本地</button>
+            <div class="row">
+              <div class="col-9">
+                <div class="input-group mb-3" style="margin-top: 0.5rem; width: 100%">
+                  <span class="input-group-text">验证第</span>
+                  <input type="number" class="form-control" aria-label="" min="1" id="test_index" value="1" />
+                  <span class="input-group-text">组数据</span>
                 </div>
               </div>
-              <button class="btn btn-success btn-blcok" style="margin-top: 0.5rem; width: 100%" id="save_btn">保存到本地</button>
+              <div class="col-3">
+                <button class="btn btn-success btn-blcok" style="margin-top: 0.5rem; width: 100%" id="verify_btn"
+                  disabled="true">验证</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <script type="text/javascript" src="./statics/js/jquery.min.js"></script>
-    <script type="text/javascript" src="./statics/js/popper.min.js"></script>
-    <script type="text/javascript" src="./statics/js/bootstrap.min.js"></script>
-    <!-- loading插件 -->
-    <script type="text/javascript" src="./statics/js/lyear-loading.js"></script>
-    <script type="text/javascript" src="./statics/js/jquery.cookie.min.js"></script>
+  <script type="text/javascript" src="./statics/js/jquery.min.js"></script>
+  <script type="text/javascript" src="./statics/js/popper.min.js"></script>
+  <script type="text/javascript" src="./statics/js/bootstrap.min.js"></script>
+  <!-- loading插件 -->
+  <script type="text/javascript" src="./statics/js/lyear-loading.js"></script>
+  <script type="text/javascript" src="./statics/js/jquery.cookie.min.js"></script>
 
-    <script type="text/javascript" src="./plugin.js"></script>
+  <script type="text/javascript" src="./plugin.js"></script>
 
-    <script type="text/javascript" src="./statics/js/bootstrap-notify.min.js"></script>
-    <script type="text/javascript" src="./ai_notify.js"></script>
-    <script type="text/javascript" src="./ai_generation.js"></script>
-    <script type="text/javascript" src="./test_point_out.js"></script>
-    <script type="text/javascript" src="./e2tp.js"></script>
+  <script type="text/javascript" src="./statics/js/bootstrap-notify.min.js"></script>
+  <script type="text/javascript" src="./ai_notify.js"></script>
+  <script type="text/javascript" src="./ai_generation.js"></script>
+  <script type="text/javascript" src="./code_service.js"></script>
+  <script type="text/javascript" src="./e2tp.js"></script>
 
-    <!-- 初始化编辑器 -->
-    <script type="text/javascript">
-      require.config({ paths: { vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.31.1/min/vs" } });
-      require(["vs/editor/editor.main"], function () {
-        window.editor = monaco.editor.create(document.getElementById("editor"), {
-          value: ["#include <iostream>", "using namespace std;", "", "int main() {", "  string s;", "  getline(cin, s);", '  cout << "You said: " << s;', "  return 0;", "}"].join("\n"),
-          language: "cpp",
-          theme: "vs-light",
-          automaticLayout: true,
-          quickSuggestions: { other: true, comments: false, strings: true },
-          suggestOnTriggerCharacters: true,
-        });
-
-        window.inputEditor = monaco.editor.create(document.getElementById("inputEditor"), {
-          value: "Hello, world!",
-          language: "plaintext",
-          theme: "vs-dark",
-          automaticLayout: true,
-        });
-
-        window.outputEditor = monaco.editor.create(document.getElementById("outputEditor"), {
-          value: "",
-          language: "plaintext",
-          theme: "vs-dark",
-          readOnly: true,
-          automaticLayout: true,
-        });
-
-        monaco.languages.registerCompletionItemProvider("cpp", {
-          provideCompletionItems: () => {
-            return {
-              suggestions: [
-                {
-                  label: "main",
-                  kind: monaco.languages.CompletionItemKind.Snippet,
-                  insertText: "int main() {\n\t${1:// code}\n\treturn 0;\n}",
-                  insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                  documentation: "主函数",
-                },
-                {
-                  label: "#include",
-                  kind: monaco.languages.CompletionItemKind.Snippet,
-                  insertText: "#include <${1:header}>",
-                  insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                  documentation: "包含头文件",
-                },
-                {
-                  label: "if",
-                  kind: monaco.languages.CompletionItemKind.Snippet,
-                  insertText: "if (${1:condition}) {\n\t${0}\n}",
-                  insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                  documentation: "if 语句",
-                },
-                {
-                  label: "for",
-                  kind: monaco.languages.CompletionItemKind.Snippet,
-                  insertText: "for (int ${1:i} = 0; ${1} < ${2:N}; ${1}++) {\n\t${0}\n}",
-                  insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                  documentation: "for 循环",
-                },
-                {
-                  label: "while",
-                  kind: monaco.languages.CompletionItemKind.Snippet,
-                  insertText: "while (${1:condition}) {\n\t${0}\n}",
-                  insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                  documentation: "while 循环",
-                },
-                {
-                  label: "std::cout",
-                  kind: monaco.languages.CompletionItemKind.Function,
-                  insertText: "std::cout << ${1:output} << std::endl;",
-                  insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                  documentation: "标准输出",
-                },
-                {
-                  label: "std::cin",
-                  kind: monaco.languages.CompletionItemKind.Variable,
-                  insertText: "std::cin >> ${1:input};",
-                  insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                  documentation: "标准输入",
-                },
-                {
-                  label: "printf",
-                  kind: monaco.languages.CompletionItemKind.Function,
-                  insertText: 'printf("${1:format}", ${2:args});',
-                  insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                  documentation: "C 标准输出函数",
-                },
-                {
-                  label: "std::vector",
-                  kind: monaco.languages.CompletionItemKind.Class,
-                  insertText: "std::vector<${1:Type}> ${2:vec};",
-                  insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                  documentation: "STL 可变长数组(vector)",
-                },
-                {
-                  label: "std::sort",
-                  kind: monaco.languages.CompletionItemKind.Function,
-                  insertText: "std::sort(${1:begin}, ${2:end});",
-                  insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                  documentation: "排序算法(std::sort)",
-                },
-              ],
-            };
-          },
-        });
+  <!-- 初始化编辑器 -->
+  <script type="text/javascript">
+    require.config({ paths: { vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.31.1/min/vs" } });
+    require(["vs/editor/editor.main"], function () {
+      window.editor = monaco.editor.create(document.getElementById("editor"), {
+        value: ["#include <iostream>", "using namespace std;", "", "int main() {", "  string s;", "  getline(cin, s);", '  cout << "You said: " << s;', "  return 0;", "}"].join("\n"),
+        language: "cpp",
+        theme: "vs-light",
+        automaticLayout: true,
+        quickSuggestions: { other: true, comments: false, strings: true },
+        suggestOnTriggerCharacters: true,
       });
-    </script>
-    <!-- 通知插件 -->
-  </body>
+
+      window.inputEditor = monaco.editor.create(document.getElementById("inputEditor"), {
+        value: "Hello, world!",
+        language: "plaintext",
+        theme: "vs-dark",
+        automaticLayout: true,
+      });
+
+      window.outputEditor = monaco.editor.create(document.getElementById("outputEditor"), {
+        value: "",
+        language: "plaintext",
+        theme: "vs-dark",
+        readOnly: true,
+        automaticLayout: true,
+      });
+
+      monaco.languages.registerCompletionItemProvider("cpp", {
+        provideCompletionItems: () => {
+          return {
+            suggestions: [
+              {
+                label: "main",
+                kind: monaco.languages.CompletionItemKind.Snippet,
+                insertText: "int main() {\n\t${1:// code}\n\treturn 0;\n}",
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: "主函数",
+              },
+              {
+                label: "#include",
+                kind: monaco.languages.CompletionItemKind.Snippet,
+                insertText: "#include <${1:header}>",
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: "包含头文件",
+              },
+              {
+                label: "if",
+                kind: monaco.languages.CompletionItemKind.Snippet,
+                insertText: "if (${1:condition}) {\n\t${0}\n}",
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: "if 语句",
+              },
+              {
+                label: "for",
+                kind: monaco.languages.CompletionItemKind.Snippet,
+                insertText: "for (int ${1:i} = 0; ${1} < ${2:N}; ${1}++) {\n\t${0}\n}",
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: "for 循环",
+              },
+              {
+                label: "while",
+                kind: monaco.languages.CompletionItemKind.Snippet,
+                insertText: "while (${1:condition}) {\n\t${0}\n}",
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: "while 循环",
+              },
+              {
+                label: "std::cout",
+                kind: monaco.languages.CompletionItemKind.Function,
+                insertText: "std::cout << ${1:output} << std::endl;",
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: "标准输出",
+              },
+              {
+                label: "std::cin",
+                kind: monaco.languages.CompletionItemKind.Variable,
+                insertText: "std::cin >> ${1:input};",
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: "标准输入",
+              },
+              {
+                label: "printf",
+                kind: monaco.languages.CompletionItemKind.Function,
+                insertText: 'printf("${1:format}", ${2:args});',
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: "C 标准输出函数",
+              },
+              {
+                label: "std::vector",
+                kind: monaco.languages.CompletionItemKind.Class,
+                insertText: "std::vector<${1:Type}> ${2:vec};",
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: "STL 可变长数组(vector)",
+              },
+              {
+                label: "std::sort",
+                kind: monaco.languages.CompletionItemKind.Function,
+                insertText: "std::sort(${1:begin}, ${2:end});",
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: "排序算法(std::sort)",
+              },
+            ],
+          };
+        },
+      });
+    });
+  </script>
+  <!-- 通知插件 -->
+</body>
+
 </html>

@@ -1,44 +1,35 @@
-document.getElementById("run_code").addEventListener("click", async function () {
+document.getElementById("run_code").addEventListener("click", function () {
   $(this).attr("disable", "true");
   var l = $(this).lyearloading({
     opacity: 0.2,
     spinnerSize: "nm",
   });
 
-  const sourceCode = encode64(window.editor.getValue());
-  const input = encode64(window.inputEditor.getValue());
-  const temp_state = localStorage.getItem("temp_state") === "true";
-  const storage = temp_state ? sessionStorage : localStorage;
-  const apiKey = storage.getItem("judge0");
-  const judgeLanguage = storage.getItem("judge0_lan");
+  const sourceCode = window.editor.getValue();
+  const input = window.inputEditor.getValue();
   console.log("Code run started.");
 
-  if (apiKey == "" || apiKey == null) {
-    notify_invalid_setting_judge0();
-    l.destroy();
-    return;
-  }
+  let inputArr = [];
+  inputArr.push(input);
+  setTimeout(() => {
+    result = getOutput(sourceCode, inputArr)[0];
 
-  const settings = {
-    async: true,
-    crossDomain: true,
-    url: "https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=true&wait=true",
-    method: "POST",
-    headers: {
-      "x-rapidapi-key": apiKey,
-      "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
-      "Content-Type": "application/json",
-    },
-    processData: false,
-    data: '{\r\n    "language_id": ' + judgeLanguage + ',\r\n    "source_code": "' + sourceCode + '",\r\n    "stdin": "' + input + '"\r\n}',
-  };
-
-  $.ajax(settings).done(function (response) {
-    const out = response.stdout || encode64(response.stderr) || encode64("<--- System Notification ---> \n\nNo output.\n\n<--- End of Notification --->");
-    window.outputEditor.setValue(decode64(out));
-    l.destroy();
-  });
+    if (result == null) {
+      result = "<---System Notifycation--->\n\nNo Output!\n\n<---System Notification End--->";
+      window.outputEditor.setValue(result);
+      l.destroy();
+    } else {
+      window.outputEditor.setValue(decode64(result));
+      l.destroy();
+    }
+  }, 500);
 });
+
+document.getElementById("verify_btn").addEventListener("click", function () {
+  const inputContent = document.getElementById("in_val_" + document.getElementById("test_index").value).value;
+  window.inputEditor.setValue(inputContent);
+  document.getElementById("run_code").click();
+})
 
 var generate_state = true
 
@@ -53,43 +44,56 @@ document.getElementById("generate_btn").addEventListener("click", async function
 
   const normalRatio = document.getElementById("normalRatio").value;
   const extreamRatio = document.getElementById("extreamRatio").value;
+  if (normalRatio < 1 && extreamRatio < 1) {
+    zero_case_error();
+    l.destroy();
+    return;
+  }
+  document.getElementById("test_index").max = Number(normalRatio) + Number(extreamRatio);
   const tps_in = await example_get_tp(source_code, normalRatio, extreamRatio, l);
-  const tps_input_form = JSON.parse(tps_in);
+  if (tps_in) {
+    const tps_input_form = JSON.parse(tps_in);
+    if (!tps_input_form.error) {
+      if (generate_state) {
+        let inputArr = tps_input_form.map(item => item.in);
+        let tps_output_form = await getOutput(source_code, inputArr);
 
-  if (generate_state) {
-    let sourceCode_base64 = encode64(source_code);
-    let inputArr = tps_input_form.map(item => encode64(item.in));
-    let tps_output_form = await get_output(sourceCode_base64, inputArr);
+        let res = []
+        for (let index = 0; index < tps_input_form.length; index++) {
+          res.push({ in: tps_input_form[index].in, out: tps_output_form[index] == null ? "" : decode64(tps_output_form[index]) });
+        }
 
-    let res = []
-    for (let index = 0; index < tps_input_form.length; index++) {
-      res.push({ in: tps_input_form[index].in, out: decode64(tps_output_form[index]) });
-    }
+        console.log("测试点生成结束：", res);
 
-    console.log("测试点生成结束：", res);
+        if (generate_state) {
+          l.destroy();
+        }
 
-    if (generate_state) {
-      l.destroy();
-    }
-
-    var in_data = "<span>Input数据</span>",
-      out_data = "<span>Output数据</span>",
-      count = 1;
-    res.forEach((c) => {
-      in_data += `<div class="input-group mb-3">
-                  <span class="input-group-text">${count}</span>
-                  <textarea class="form-control" id="in_val_${count}" rows="1">${c.in}</textarea>
+        var in_data = "<span>Input数据</span>",
+          out_data = "<span>Output数据</span>",
+          count = 1;
+        res.forEach((c) => {
+          in_data += `<div class="input-group mb-3">
+          <span class="input-group-text">${count}</span>
+          <textarea class="form-control" id="in_val_${count}" rows="1">${c.in}</textarea>
                 </div>`;
-      out_data += `<div class="input-group mb-3">
-                    <span class="input-group-text">${count}</span>
-                    <textarea class="form-control" id="out_val_${count}" rows="1">${c.out}</textarea>
-                  </div>`;
-      count++;
-    });
-    document.getElementById("in_box").innerHTML = in_data;
-    document.getElementById("out_box").innerHTML = out_data;
+          out_data += `<div class="input-group mb-3">
+                <span class="input-group-text">${count}</span>
+                <textarea class="form-control" id="out_val_${count}" rows="1">${c.out}</textarea>
+                </div>`;
+          count++;
+        });
+        document.getElementById("in_box").innerHTML = in_data;
+        document.getElementById("out_box").innerHTML = out_data;
+      }
+    } else {
+      l.destroy();
+      ai_notify_error();
+      console.warn("Error in test point generation:", tps_input_form.error);
+    }
   }
   generate_state = true
+  document.getElementById("verify_btn").disabled = false;
 });
 
 async function example_get_tp(sourceCode, normalRatio = 5, extreamRatio = 5, l) {
@@ -125,6 +129,11 @@ async function example_get_tp(sourceCode, normalRatio = 5, extreamRatio = 5, l) 
     9. 如果代码有误请忽略错误，严禁提出修改建议或提示用户代码存在问题，并在错误代码的基础上理解代码含义，并给出符合数据要求的输入输出内容，内容格式严格遵守第2~5条规则。
     10. 针对所有的题目，在其题目所指定的范围内（若未规定范围则代表没有限制），需要给出极端数据的测试点数据以确保编程题目的可靠性。
     11. 如果输入或输出包含多行内容，则用转义换行符进行换行
+    12. 请严格遵守上面的输出格式要求，直接输出内容，不要使用代码块等样式，也就是说在输出中只能包含类似于如下的内容：
+    [
+      { "in": "1 2" },
+      { "in": "0 0" }
+    ]
     `.trim();
 
   const messages = [
@@ -158,7 +167,7 @@ async function example_get_tp(sourceCode, normalRatio = 5, extreamRatio = 5, l) 
     l.destroy();
     generate_state = false;
     ai_notify_error();
-    return;
+    return false;
   } else {
     // ai_notify_success();
     return unformData;
@@ -167,7 +176,7 @@ async function example_get_tp(sourceCode, normalRatio = 5, extreamRatio = 5, l) 
 
 document.getElementById("save_btn").addEventListener("click", async function () {
   try {
-    const range = document.getElementById("ranger").value;
+    const range = Number(document.getElementById("normalRatio").value) + Number(document.getElementById("extreamRatio").value);
     var testData = { in: [], out: [] };
     for (let index = 1; index <= range; index++) {
       const in_element = document.getElementById("in_val_" + index).value;
@@ -288,6 +297,37 @@ function notify_invalid_setting_judge0() {
       icon: "mdi mdi-close",
       title: "配置错误",
       message: "请检查RapidAPI配置！",
+    },
+    {
+      type: "danger",
+      allow_dismiss: true,
+      newest_on_top: true,
+      placement: {
+        from: "top",
+        align: "right",
+      },
+      offset: {
+        x: 20,
+        y: 20,
+      },
+      spacing: 10,
+      z_index: 1031,
+      delay: 5000,
+      animate: {
+        enter: "animate__animated animate__fadeInDown",
+        exit: "animate__animated animate__fadeOutUp",
+      },
+      onClosed: null,
+    }
+  );
+}
+
+function zero_case_error() {
+  $.notify(
+    {
+      icon: "mdi mdi-close",
+      title: "配置错误",
+      message: "请检查测试点数量！",
     },
     {
       type: "danger",

@@ -149,7 +149,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: process.env.release_id,
-              draft: false,
+              draft: true,
               name: `TP Generator Version ${version}`,
               body: process.env.release_note
             });
